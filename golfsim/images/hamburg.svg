@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient id="color-0-0" gradientUnits="userSpaceOnUse" x1="250" y1="80" x2="250" y2="100" gradientTransform="matrix(0.055556, 0, 0, 18, 0.000005, -0.000221)" spreadMethod="pad" xlink:href="#color-0"/>
+    <linearGradient id="color-0" bx:pinned="true">
+      <stop style="stop-color: rgb(58, 255, 0);" offset="0"/>
+      <stop offset="0.299" style="stop-color: rgb(13, 216, 0);"/>
+      <stop offset="0.625" style="stop-color: rgb(0, 220, 40);"/>
+      <stop style="stop-color: rgb(0, 171, 45);" offset="1"/>
+    </linearGradient>
+    <linearGradient id="gradient-0-0" gradientUnits="userSpaceOnUse" x1="13.889" y1="1440" x2="13.889" y2="1800" gradientTransform="matrix(1, 0, 0, 1, 0, 0)" xlink:href="#gradient-0"/>
+    <linearGradient id="gradient-0">
+      <title>grad2</title>
+      <stop style="stop-color: rgb(50, 187, 9);" offset="0"/>
+      <stop style="stop-color: rgb(16, 248, 1);" offset="0.299"/>
+      <stop style="stop-color: rgb(5, 201, 41);" offset="0.625"/>
+      <stop style="stop-color: rgb(5, 241, 67);" offset="1"/>
+    </linearGradient>
+    <linearGradient id="gradient-2-0" gradientUnits="userSpaceOnUse" x1="13.889" y1="1440" x2="13.889" y2="1800" gradientTransform="matrix(1, 0, 0, 1, 0, 0)" xlink:href="#gradient-2"/>
+    <linearGradient id="gradient-2">
+      <title>grad3</title>
+      <stop style="stop-color: rgb(54, 238, 0);" offset="0"/>
+      <stop style="stop-color: rgb(11, 189, 0);" offset="0.299"/>
+      <stop style="stop-color: rgb(40, 254, 32);" offset="0.625"/>
+      <stop style="stop-color: rgb(1, 238, 63);" offset="1"/>
+    </linearGradient>
+  </defs>
+  <rect style="stroke: rgb(0, 0, 0); fill: url('#color-0-0'); fill-rule: nonzero; paint-order: stroke; stroke-width: 0px; transform-origin: 13.889px 1620px;" x="3.889" width="20" height="360" rx="12" ry="12" y="1440" transform="matrix(0, 1, -1, 0, 236.111000061035, -1510)"/>
+  <rect style="stroke: rgb(0, 0, 0); fill-rule: nonzero; paint-order: stroke; stroke-width: 0px; fill: url('#gradient-0-0'); transform-origin: 13.889px 1620px;" x="3.889" width="20" height="360" rx="12" ry="12" y="1440" transform="matrix(0, 1, -1, 0, 236.110992431641, -1370)"/>
+  <rect style="stroke: rgb(0, 0, 0); fill-rule: nonzero; paint-order: stroke; stroke-width: 0px; fill: url('#gradient-2-0'); transform-origin: 13.889px 1620px;" x="3.889" width="20" height="360" rx="12" ry="12" y="1440" transform="matrix(0, 1, -1, 0, 236.110992431641, -1230)"/>
+</svg>
