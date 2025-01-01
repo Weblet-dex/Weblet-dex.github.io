@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Bootstrap Example</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+	<style>
+		.input-group-text {
+			background-color: #f1f1f1;
+		}
+
+		form .input-group{
+			width: auto;
+		}
+		
+		.input-group .decimal{
+			width: 74px !important;
+			flex: none !important;
+		}
+
+		.input-group .whole{
+			width: 112px !important;
+			flex: none !important;
+		}
+		
+		.input-group label{
+			margin: 0 0 0 12px;
+			line-height: 38px !important;
+		}
+
+		.colm-left{
+			min-width: 364px;
+		}
+
+		.colm-right{
+			min-width: 364px;
+		}
+
+		.answr{
+			height: 100%;
+			width: 100px;
+			text-align: center;
+			font-size: 1.5rem;
+			font-weight: 800;
+		}
+		
+	</style>
+</head>
+<body>
+	<div class="container-fluid mt-5">
+		<h3>Input Groups</h3>
+		<p>The .input-group class is a container to enhance an input by adding an icon, text or a button in front (.input-group-prepend) or behind (.input-group-append) the input field as a "help text".</p>
+		<p>Use the .input-group-text class to style the specified help text.</p>
+	
+		<form name="frm">
+			<div class="row" style="justify-content: center;">
+				<div class="col-3 colm-left">
+					<!-- base weapon dmg -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control whole" id="base" name="baseDmg" value="28">
+						<label for="base">Base Weapon Dmg</label>
+					</div>
+					<!-- weapon dmg -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control whole" id="wep" name="wepDmg" value="0">
+						<label for="wep">+ Weapon Dmg</label>
+					</div>
+					<!-- "+𝑥 Additional Dmg" (armor + jewlery) -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control whole" id="add" name="addDmg" value="0">
+						<label for="add">+ Additional Dmg (armor)</label>
+					</div>
+					<!-- "+𝑥 True Dmg" -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control whole" id="tru" name="truDmg" value="0">
+						<label for="tru">True DMG</label>
+					</div>
+					<!-- Physical/Magical Power Bonus %% -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control decimal" id="pwr" name="pwrDmg" value="0">
+						<div class="input-group-append">
+							<span class="input-group-text">%</span>
+						</div>
+						<label for="pwr">Physical/Magical DMG Bonus</label>
+					</div>
+					<!-- Armor/Magic Penetration %% -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control decimal" id="pen" name="penDmg" value="0">
+						<div class="input-group-append">
+							<span class="input-group-text">%</span>
+						</div>
+						<label for="pen">Armor/Magic Penetration</label>
+					</div>
+					<!-- Physical/Magical Dmg Reduction (of enemy) %% -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control decimal" id="pdr" name="pdrDmg" value="0">
+						<div class="input-group-append">
+							<span class="input-group-text">%</span>
+						</div>
+						<label for="pdr">PDR / MDR (target)</label>
+					</div>
+				</div>
+				<div class="col-3 colm-right">
+					<!-- Buff '+𝑥 Weapon Dmg' -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control whole" id="buff" name="buffDmg" value="0">
+						<label for="buff">Buff +𝑥 Weapon Dmg'</label>
+					</div>
+					<!-- Impact Zone Multiplier (weapon) -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control decimal" id="zone" name="zoneDmg" value="100">
+						<div class="input-group-append">
+							<span class="input-group-text">%</span>
+						</div>
+						<label for="zone">Impact Zone Multiplier</label>
+					</div>
+					<!-- Divine Strike Added Dmg -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control whole" id="divn" name="divnDmg" value="0">
+						<label for="divn">Divine Strike Dmg</label>
+					</div>
+					<!-- Hit Location Multiplier (body) -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control decimal" id="hitloc" name="hitlocDmg" value="100">
+						<div class="input-group-append">
+							<span class="input-group-text">%</span>
+						</div>
+						<label for="hitloc">Hit Location Multiplier</label>
+					</div>
+					<!-- Race Damage Bonus-->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control decimal" id="race" name="raceDmg" value="0">
+						<div class="input-group-append">
+							<span class="input-group-text">%</span>
+						</div>
+						<label for="race">Race Damage Bonus</label>
+					</div>			
+					<!-- Projectile Dmg Reduction (of enemy) %% -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control decimal" id="proj" name="projDmg" value="0">
+						<div class="input-group-append">
+							<span class="input-group-text">%</span>
+						</div>
+						<label for="proj">Projectile PDR</label>
+					</div>
+					<!-- Projectile Dmg Falloff Multiplier %% -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control decimal" id="fall" name="fallDmg" value="100">
+						<div class="input-group-append">
+							<span class="input-group-text">%</span>
+						</div>
+						<label for="fall">Projectile Dmg Falloff</label>
+					</div>
+					<!-- Combo Bonus %% -->
+					<div class="input-group mb-1">
+						<input type="number" class="form-control decimal" id="comb" name="combDmg" value="100">
+						<div class="input-group-append">
+							<span class="input-group-text">%</span>
+						</div>
+						<label for="comb">Combo Bonus</label>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="row" style="justify-content: center;">
+			<div class="col-1">
+				<button type="button" class="btn btn-outline-primary btn-lg" id="run-btn">RUN</button>
+			</div>
+			<div class="col-3">
+				<!-- align vertically in center -->
+				<input class="form-control answr" type="text" value="0" readonly>
+			</div>
+		</div>
+	</div>
+<script>
+	var base, wep, add, tru, pwr, pen, pdr, buff, zone, divn, hitloc, race, proj, fall, comb;
+
+	$(document).ready(function($){
+		setStats();
+	}(jQuery));
+
+	$('#run-btn').click(function(){
+		setStats();
+		
+		//console.log(base, wep, add, tru, pwr, pen, pdr, buff, buff, divn, hitloc, proj, fall, comb);
+		//=(((((B2 + B11) * B17 * B12 + B3 + B13) * (1 + B6) + B4) * B14 * MAX(0, 1 - B8 * (1 - B7)) * (1 - B15)) * B16) + B5
+		//var xzDmg = ((((base + buff) * (comb/100) * (zone/100) + wep + divn) * (1 + (pwr/100)) + add) * (hitloc/100) * Math.max(0, 1 - (pdr/100) * (1 - (pen/100))) * (1 - (proj/100))) * (fall/100) + tru;
+		//finDmg(OLD and == the same as new) = yDmg  * Math.max(0, 1 - (pdr/100) * (1 - (pen/100))) * (1 - (proj/100)) * (fall/100) + tru;
+		var xDmg = ((base + buff) * (comb/100) * (zone/100) + wep + divn);
+		var yDmg = (xDmg * (1 + (pwr/100)) + add)  * (hitloc/100) * (1 + (race/100));
+		var finDmg = yDmg  * Math.max((1 - (pdr/100) * (1 - Math.min((pen/100), 1))), 1 - (pdr/100)) * (1 - (proj/100)) * (fall/100) + tru;
+		$('.answr').val(finDmg.toFixed(2));
+	});
+
+	function setStats(){
+		base = parseFloat(document.forms['frm']['base'].value);
+		wep = parseFloat(document.forms['frm']['wep'].value);
+		add = parseFloat(document.forms['frm']['add'].value);
+		tru = parseFloat(document.forms['frm']['tru'].value);
+		pwr = parseFloat(document.forms['frm']['pwr'].value);
+		pen = parseFloat(document.forms['frm']['pen'].value);
+		pdr = parseFloat(document.forms['frm']['pdr'].value);
+		buff = parseFloat(document.forms['frm']['buff'].value);
+		zone = parseFloat(document.forms['frm']['zone'].value);
+		divn = parseFloat(document.forms['frm']['divn'].value);
+		hitloc = parseFloat(document.forms['frm']['hitloc'].value);
+		race = parseFloat(document.forms['frm']['race'].value);
+		proj = parseFloat(document.forms['frm']['proj'].value);
+		fall = parseFloat(document.forms['frm']['fall'].value);
+		comb = parseFloat(document.forms['frm']['comb'].value);
+	}
+</script>
+</body>
+</html>
