@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SQUEEXE</title>
+    <meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+    <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.156.1/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.156.1/examples/jsm/"
+        }
+      }
+    </script>
+</head>
+<style>
+
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@300;400&family=Comfortaa:wght@300&family=Quicksand:wght@300&display=swap');
+
+
+    @font-face {
+        font-family: 'promethean_boldbold';
+        src: url('prometheanbold-webfont.woff2') format('woff2'),
+             url('prometheanbold-webfont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+
+    }
+    @font-face {
+        font-family: 'dolce_vita_lightregular';
+        src: url('dolce_vita_light-webfont.woff2') format('woff2'),
+             url('dolce_vita_light-webfont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'nebula-regular';
+        src: url('nebula-regular-webfont.woff2') format('woff2'),
+             url('nebula-regular-webfont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+
+    body, html {
+        font-family: 'Bebas Neue'; 
+        overscroll-behavior-y: none;
+        padding: 0;
+        margin: 0;
+        background: content-box radial-gradient(#0e111a 35% 25%, #000000 90% 50%);
+        overflow: hidden;
+        height: 100%;
+        -webkit-user-select: none;
+           -moz-user-select: none;
+             -o-user-select: none;
+            -ms-user-select: none;
+                user-select: none;                
+    }
+    body {
+        /*position: relative;*/
+        /*background: linear-gradient(90deg,#e52e71,#ff8a00);*/
+        /* background: linear-gradient(90deg,#c43402,#ff6700); */
+        /* background: #0e111a;*/
+        opacity: 0;
+        /* background: linear-gradient(90deg,#0e111a,#000000); */
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .nebula {
+        /* color:#c43402; */
+        color:#741a04;
+        font-family: 'nebula-regular';
+        font-weight: normal;
+        font-size: 1.4em;
+    }
+
+    #audioCanvas {
+        /*mix-blend-mode: color-dodge;
+        pointer-events: none;*/
+        display: none;
+    }
+
+    .hidden {
+        display: none;
+        visibility: hidden;
+    }
+
+    .content {
+        display: flex;
+        justify-content: center;
+        vertical-align: middle;
+        height: 100%; 
+        width: 100%;
+        position: absolute;
+    }
+
+    #logoMain {
+        z-index: 9;
+        pointer-events: none;
+        overflow: visible;
+    }
+
+    .flicker {
+      animation: flicker 3s linear infinite 3s;
+    }
+    .neon {
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #0ff, 0 0 30px #0ff,
+        0 0 40px #0ff, 0 0 120px #0ff, 0 0 140px #0ff, 0 0 200px #0ff,
+        0 0 500px #0ff;
+    }
+    @keyframes flicker {
+      0% {
+        text-shadow: none;
+      }
+      6% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff,
+          0 0 40px #fff, 0 0 120px #fff, 0 0 140px #fff, 0 0 200px #fff,
+          0 0 500px #fff;
+      }
+      8% {
+        text-shadow: none;
+      }
+      10% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff,
+          0 0 40px #fff, 0 0 120px #fff, 0 0 140px #fff, 0 0 200px #fff,
+          0 0 500px #fff;
+      }
+      12% {
+        text-shadow: none;
+      }
+      14% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #0ff, 0 0 30px #fff,
+          0 0 40px #fff, 0 0 120px #fff, 0 0 140px #fff, 0 0 200px #fff,
+          0 0 500px #fff;
+      }
+    }
+
+    #bgCanvas {        
+        z-index: 1;
+        mix-blend-mode: screen;
+    }
+
+    #contactDiv {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 10;
+    }
+
+    #white, #black {
+        display: none;
+        background: rgba(255, 255, 255, 0);
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
+    #white {
+        z-index: 1;
+    }
+    #black {
+        z-index: 1;
+        background: #080808;
+        display: none;
+        width: 0%;
+    }
+    #threejs_container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 11;
+    }
+    #container_logzbuf{
+        position: absolute;
+        width: inherit;
+        height: inherit;
+    }
+    #menu {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: stretch;
+        width: 22vh;
+        border: 1px solid #741a04;
+        /* border: 1px solid #c43402; */
+        border-radius: 1vh;
+        position: fixed;
+        left: 2.5vh;
+        top: 2.5vw;
+        z-index: 90;
+        background: rgba(0, 0, 0, .2);
+        backdrop-filter: blur(8px);
+        /* overflow: hidden;
+        overscroll-behavior-y: auto; */
+    }
+    .menuLogoImg {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: -2%;
+        width: 80%;
+        fill: #c43402;
+    }
+    #menuItemsHolder{
+        /* height: inherit; */
+        overflow: scroll;
+        scroll-behavior: smooth;
+        overscroll-behavior-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .menuItem {
+        /* font-size: 1.8vh; */
+        font-family: 'dolce_vita_lightregular';
+        color: #b7b8bb;
+        border: 1px solid #b7b8bb;
+        /* border-bottom: 1px solid #b7b8bb; */
+        font-weight: bold;
+        letter-spacing: 0.063em;
+        padding: 0.47vh;
+        margin: 0.47vh;
+        border-radius: 0.5vh;
+        text-align: center;
+    }
+    .menuItemCurrent {
+        font-size: 2vh;
+        font-family: 'dolce_vita_lightregular';
+        /* color: #c43402; */
+        color: #ff3b06;
+        font-weight: bold;
+        letter-spacing: 0.063em;
+        padding: 2px;
+        margin-top: -12%;
+        text-align: center;
+    }
+    #menuEnd {
+        position: fixed;
+        font-family: 'dolce_vita_lightregular';
+        border: 1px solid rgba(255, 255, 255, 0);
+        font-weight: bold;
+        letter-spacing: 0.063em;
+        padding: 0.47vh;
+        margin: 0.47vh;
+        border-radius: 0.5vh;
+        width: 50px;
+        color: rgba(0, 0, 0, 0);
+        left: 40vw;
+        top: 20vh;
+        z-index: 20;
+    }
+    #logTxt {
+        position: fixed;
+        font-family: 'dolce_vita_lightregular';
+        font-weight: bold;
+        font-size: 12px;
+        letter-spacing: 0.063em;
+        width: 50vw;
+        height: 20vw;
+        color: rgb(0, 255, 0);
+        left: 25vw;
+        top: 40vh;
+        z-index: -10;
+    }
+    .mainPage {
+        display: none;
+        color: #ffffff;
+        position: absolute;
+        top: 1vh;
+        z-index: 29;
+        font-family: 'Quicksand';
+    }
+    .sectionB {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: flex-end;
+        position: fixed;
+        right: 2.5vw;
+        top: 48px;
+        /* font-size: 3.33vh; */
+        text-align: right;
+        max-width: 70vw;
+        /*height: 70vh;
+        top: 29vh;*/
+    }
+    .sectionA {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: flex-start;
+        position: fixed;
+        left: 2.5vw;
+        bottom: 2.5vw;
+        max-width: 1260px;
+        /* font-size: 12; */
+    }
+    .bullet-text {
+        /* font-size: 2.7vh; */
+        color: #b7b8bb;
+        line-height: 100%;
+        font-size: clamp(3.5mm, 5vmin, 7mm);
+    }
+    .bullet {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: flex-start;
+        margin-bottom: 4px;
+    }
+    .bullet-title {
+        flex-flow: row nowrap;
+        align-items: flex-start;
+        font-weight: bold;
+        font-size: clamp(4.0mm, 3vmax, 10mm);
+        /* font-size: 3vmax; */
+        line-height: 100%;
+        color: #c43402;
+        /* color: #741a04; */
+        /* margin-bottom: -8px; */
+    }
+    .sectionB-text {
+        font-size: clamp(6mm, 3vmax, 10mm);
+        line-height: 100%;
+        color: #e2e2e2;
+    }
+    a {
+        color: white;
+        text-decoration-style: underline;
+    }
+</style>
+
+<script type="text/javascript" src="gsap/gsap.min.js"></script>
+<script type="text/javascript" src="gsap/EasePack.min.js"></script>
+<script type="text/javascript" src="gsap/GSDevTools.min.js"></script>
+<script type="text/javascript" src="gsap/MorphSVGPlugin.min.js"></script>
+<script type="text/javascript" src="gsap/SplitText.min.js"></script>
+<script type="application/javascript" src="gsap/ScrambleTextPlugin.min.js"></script>
+
+<body id="body">
+
+    <div id="defs" class="hidden">
+        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 272.3">
+          <defs>
+            <style type="text/css">
+                .st0{fill:#b7b8bb;}
+            </style>
+            <g id="logoSVG">
+                <g id="letters">
+                    <path id="bigX" class="st0" d="M1532.6,26.4c-4,0-7.8,1.8-10.3,4.9l-75.6,106.1l75.6,103.6c2.6,3,6.3,4.8,10.3,4.8h110.1
+                        c0.3,0,0.6,0.1,0.8,0.4c0.3,0.3,0.4,0.6,0.4,1v23.7c0,0.4-0.1,0.7-0.4,1c-0.2,0.2-0.5,0.4-0.8,0.4H1530
+                        c-11.9,0-23.2-3.3-31.8-13.1l-71.1-96.5l-68.3,94.9c-8.6,9.8-18.9,14.7-30.8,14.7h-116.4c-0.3,0-0.6-0.1-0.8-0.4
+                        c-0.3-0.3-0.4-0.6-0.4-1v-23.7c0-0.4,0.1-0.7,0.4-1c0.2-0.2,0.5-0.4,0.8-0.4h113.8c4,0,7.8-1.7,10.3-4.8l73.3-103l-74-104
+                        c-2.9-3.3-5.6-7.7-9.5-7.7h-114c-0.3,0-0.6-0.1-0.8-0.4c-0.2-0.2-0.4-0.5-0.4-0.9V1.2c0-0.3,0.1-0.6,0.4-0.9
+                        c0.2-0.2,0.5-0.4,0.8-0.4h116.4c11.9,0,21.3,6.5,30,16.2l70.3,95.4l71.1-97C1507.9,4.9,1518.1,0,1530,0h112.7
+                        c0.7,0,1.2,0.6,1.2,1.2v23.9c0,0.3-0.1,0.6-0.4,0.8c-0.2,0.2-0.5,0.4-0.8,0.4L1532.6,26.4z"/>
+                    <path id="q" class="st0" d="M412,209.9h-99.2c-9.6,0-18-2.5-25.2-7.4c-7.2-4.9-13.3-11.1-18-18.3c-4.8-7.2-8.4-15.1-10.8-23.4
+                        c-2.2-7.3-3.5-14.8-3.6-22.4v-7.5c0.2-7.6,1.4-15.1,3.6-22.4c2.4-8.3,6-16.2,10.8-23.4c4.7-7.2,10.9-13.5,18-18.3
+                        c7.2-4.9,15.6-7.4,25.2-7.4h119c9.6,0,18,2.5,25.2,7.4c7.1,4.9,13.3,11.1,18,18.3c4.8,7.2,8.4,15.1,10.8,23.4
+                        c2.2,7.3,3.5,14.8,3.6,22.4v7.5c-0.1,6.5-1,13-2.7,19.2c-1.8,7.1-4.6,14-8.1,20.4c-3.6,6.6-8.1,12.6-13.4,17.9
+                        c-5.3,5.3-11.7,9.2-18.8,11.6l27.3,26.1h-37L412,209.9z M282.2,135.4c0,6.2,0.9,12.3,2.7,18.2c1.7,5.9,4.3,11.4,7.7,16.5
+                        c3.1,4.7,7.2,8.8,12,11.9c4.8,3,10.4,4.6,16.1,4.5h66.7l-43.2-41.2h37l43.2,41.2c5.6,0.1,11.1-1.5,15.8-4.5
+                        c4.8-3.1,8.9-7.1,12-11.9c3.4-5.1,6-10.7,7.7-16.5c1.8-5.9,2.7-12,2.7-18.2v-1.5c0-6.2-0.9-12.3-2.7-18.2
+                        c-1.7-5.9-4.3-11.4-7.7-16.5c-3.1-4.7-7.2-8.8-12-11.9c-4.8-3-10.4-4.6-16.1-4.5H320.7c-5.7-0.1-11.3,1.5-16.1,4.5
+                        c-4.8,3.1-8.9,7.1-12,11.9c-3.4,5.1-6,10.7-7.7,16.5c-1.8,5.9-2.7,12-2.7,18.2L282.2,135.4z"/>
+                    <path id="s" class="st0" d="M30.5,109c-0.1,3.5,1.3,6.8,3.8,9.3c2.4,2.5,5.7,3.9,9.2,3.8h130.9c24,0,43.5,19.5,43.5,43.5
+                        c0,0,0,0.1,0,0.1v2.1c0,24-19.5,43.6-43.5,43.6H9.9c-0.3,0-0.6-0.1-0.8-0.4c-0.3-0.3-0.4-0.6-0.4-1v-23.5c0-0.4,0.1-0.7,0.4-1
+                        c0.2-0.2,0.5-0.4,0.8-0.4h164.4c7.2,0,13-5.8,13-13v-11c0-3.5-1.3-6.8-3.8-9.2c-2.4-2.5-5.7-3.9-9.2-3.9H43.5
+                        c-24,0-43.5-19.5-43.5-43.5v-2.3c0-24,19.5-43.5,43.5-43.5h164.4c0.3,0,0.6,0.1,0.8,0.4c0.2,0.2,0.4,0.5,0.4,0.8v23.6
+                        c0,0.3-0.1,0.6-0.4,0.8c-0.2,0.2-0.5,0.4-0.8,0.4H43.5c-3.5,0-6.8,1.4-9.1,3.9c-2.5,2.4-3.9,5.8-3.8,9.3L30.5,109z"/>
+                    <path id="s2" class="st0" d="M30.5,109c-0.1,3.5,1.3,6.8,3.8,9.3c2.4,2.5,5.7,3.9,9.2,3.8h130.9c24,0,43.5,19.5,43.5,43.5
+                        c0,0,0,0.1,0,0.1v2.1c0,24-19.5,43.6-43.5,43.6H9.9c-0.3,0-0.6-0.1-0.8-0.4c-0.3-0.3-0.4-0.6-0.4-1v-23.5c0-0.4,0.1-0.7,0.4-1
+                        c0.2-0.2,0.5-0.4,0.8-0.4h164.4c7.2,0,13-5.8,13-13v-11c0-3.5-1.3-6.8-3.8-9.2c-2.4-2.5-5.7-3.9-9.2-3.9H43.5
+                        c-24,0-43.5-19.5-43.5-43.5v-2.3c0-24,19.5-43.5,43.5-43.5h164.4c0.3,0,0.6,0.1,0.8,0.4c0.2,0.2,0.4,0.5,0.4,0.8v23.6
+                        c0,0.3-0.1,0.6-0.4,0.8c-0.2,0.2-0.5,0.4-0.8,0.4H43.5c-3.5,0-6.8,1.4-9.1,3.9c-2.5,2.4-3.9,5.8-3.8,9.3L30.5,109z"/>
+                    
+                    <path id="u" class="st0" d="M745.2,168c0,24-19.5,43.5-43.5,43.5c0,0-0.1,0-0.1,0H570.8c-24,0-43.5-19.4-43.6-43.5V60.3
+                        c0-0.7,0.5-1.3,1.2-1.4c0.1,0,0.1,0,0.2,0h27.9c0.3,0,0.6,0.1,0.8,0.4c0.3,0.3,0.4,0.6,0.4,1v112c-0.1,3.5,1.3,6.9,3.9,9.3
+                        c2.4,2.5,5.8,3.9,9.2,3.8h130.7c7.2,0.1,13.1-5.7,13.1-12.9c0-0.1,0-0.2,0-0.2v-112c0-0.7,0.5-1.3,1.2-1.4c0,0,0.1,0,0.1,0h27.8
+                        c0.7,0,1.3,0.5,1.4,1.2c0,0.1,0,0.1,0,0.2V168z"/>
+                    <path id="e" class="st0" d="M821.4,122.1h164.3c0.7,0,1.3,0.5,1.4,1.2c0,0,0,0.1,0,0.1v23.5c0,0.7-0.5,1.3-1.2,1.4
+                        c0,0-0.1,0-0.1,0H821.4v24c0,3.5,1.3,6.8,3.8,9.2c2.4,2.5,5.8,4,9.3,3.9h173c0.4,0,0.7,0.1,1,0.4c0.2,0.2,0.4,0.5,0.4,0.8v23.5
+                        c0,0.4-0.1,0.7-0.4,1c-0.3,0.3-0.6,0.4-1,0.4h-173c-24,0.1-43.6-19.3-43.6-43.4c0-0.1,0-0.2,0-0.3v-65.3
+                        c-0.1-24,19.3-43.6,43.4-43.6c0.1,0,0.2,0,0.3,0h173c0.4,0,0.7,0.1,1,0.4c0.3,0.3,0.4,0.6,0.4,1v23.5c0,0.3-0.1,0.6-0.4,0.8
+                        c-0.3,0.3-0.6,0.4-1,0.4h-173c-3.5-0.1-6.9,1.3-9.3,3.9c-2.5,2.4-3.8,5.8-3.8,9.2V122.1z"/>
+                    <path id="e2" class="st0" d="M1085.2,122.1h164.3c0.4,0,0.7,0.1,1,0.4c0.3,0.3,0.4,0.6,0.4,1V147c0,0.4-0.1,0.7-0.4,1
+                        c-0.3,0.3-0.6,0.4-1,0.4h-164.3v24c0,3.5,1.3,6.8,3.8,9.2c2.4,2.5,5.8,4,9.3,3.9h173c0.4,0,0.7,0.1,1,0.4c0.2,0.2,0.4,0.5,0.4,0.8
+                        v23.5c0,0.4-0.1,0.7-0.4,1c-0.3,0.3-0.6,0.4-1,0.4h-173c-24,0.1-43.6-19.3-43.6-43.4c0-0.1,0-0.2,0-0.3v-65.4
+                        c-0.1-24,19.3-43.6,43.4-43.6c0.1,0,0.2,0,0.3,0h173c0.7,0,1.3,0.5,1.4,1.2c0,0.1,0,0.1,0,0.2v23.5c0,0.3-0.1,0.6-0.4,0.8
+                        c-0.3,0.3-0.6,0.4-1,0.4h-173c-3.5-0.1-6.9,1.3-9.3,3.9c-2.5,2.4-3.9,5.8-3.8,9.2L1085.2,122.1z"/>
+                    <path id="e3" class="st0" d="M1612.5,122.1h164.3c0.4,0,0.7,0.1,1,0.4c0.3,0.3,0.4,0.6,0.4,1V147c0,0.4-0.1,0.7-0.4,1
+                        c-0.3,0.3-0.6,0.4-1,0.4h-164.3v24c0,3.5,1.3,6.8,3.8,9.2c2.4,2.5,5.8,4,9.3,3.9h173c0.4,0,0.7,0.1,1,0.4c0.2,0.2,0.4,0.5,0.4,0.8
+                        v23.5c0,0.4-0.1,0.7-0.4,1c-0.3,0.3-0.6,0.4-1,0.4h-173c-24,0.1-43.6-19.3-43.6-43.4c0-0.1,0-0.2,0-0.3v-65.4
+                        c-0.1-24,19.3-43.6,43.4-43.6c0.1,0,0.2,0,0.3,0h173c0.7,0,1.3,0.5,1.4,1.2c0,0.1,0,0.1,0,0.2v23.5c0,0.3-0.1,0.6-0.4,0.8
+                        c-0.3,0.3-0.6,0.4-1,0.4h-173c-3.5-0.1-6.9,1.3-9.3,3.9c-2.5,2.4-3.9,5.8-3.8,9.2V122.1z"/>
+                </g>
+            </g>
+
+            <g id="isComing">
+                <g id="is">
+                  <path id="isi" class="cls-1" d="M80.4,202.9a1,1,0,0,1-.4.8,1.27,1.27,0,0,1-.9.4H53.4a1,1,0,0,1-.8-.4,1.23,1.23,0,0,1-.4-.8V65.2a1,1,0,0,1,.4-.9,1.23,1.23,0,0,1,.8-.4H79a1,1,0,0,1,.9.4,1.27,1.27,0,0,1,.4.9V202.9Z" transform="translate(0 0.1)"/>
+                  <path id="iss" class="cls-1" d="M150.4,109.9a12,12,0,0,0,11.9,12H282.5A39.95,39.95,0,0,1,322.4,162v2a40.12,40.12,0,0,1-39.9,40.1h-151a1,1,0,0,1-.8-.4,1.27,1.27,0,0,1-.4-.9V181.2a1,1,0,0,1,.4-.9,1.23,1.23,0,0,1,.8-.4H282.6A12,12,0,0,0,294.5,168V157.9a11.87,11.87,0,0,0-3.5-8.5,11.2,11.2,0,0,0-8.4-3.6H162.3a39.95,39.95,0,0,1-39.9-39.9v-2.1a39.95,39.95,0,0,1,39.9-39.9H313.4a1,1,0,0,1,.8.4,1.23,1.23,0,0,1,.4.8V86.8a1,1,0,0,1-.4.8,1.23,1.23,0,0,1-.8.4H162.3a11.48,11.48,0,0,0-8.4,3.5,11.7,11.7,0,0,0-3.5,8.5v9.9Z" transform="translate(0 0.1)"/>
+                </g>
+                <path id="c" class="cls-1" d="M703.7,180.1a1.2,1.2,0,0,1,1.3,1.1v21.6a1,1,0,0,1-.4.9,1.27,1.27,0,0,1-.9.4H544.8A39.95,39.95,0,0,1,504.7,164V104a39.95,39.95,0,0,1,40.1-40.1H703.7a1,1,0,0,1,.9.4,1.27,1.27,0,0,1,.4.9V86.8a1,1,0,0,1-.4.8,1.27,1.27,0,0,1-.9.4H544.8a11.26,11.26,0,0,0-8.5,3.6,11.87,11.87,0,0,0-3.5,8.5V168a11.87,11.87,0,0,0,3.5,8.5,11.41,11.41,0,0,0,8.5,3.6Z" transform="translate(0 0.1)"/>
+                <path id="o" class="cls-1" d="M907.2,63.9A39.95,39.95,0,0,1,947.3,104v60a39.95,39.95,0,0,1-40.1,40.1H787.1A40.12,40.12,0,0,1,747,164V104a40.12,40.12,0,0,1,40.1-40.1Zm12,36a11.87,11.87,0,0,0-3.5-8.5,11.41,11.41,0,0,0-8.5-3.6H787.1A12.3,12.3,0,0,0,775,99.9V168a12.3,12.3,0,0,0,12.1,12.1H907.2a11.26,11.26,0,0,0,8.5-3.6,11.87,11.87,0,0,0,3.5-8.5V99.9Z" transform="translate(0 0.1)"/>
+                <path id="m" class="cls-1" d="M1197.5,202.8a1,1,0,0,1-.4.9,1.27,1.27,0,0,1-.9.4h-25.6a1,1,0,0,1-.8-.4,1.27,1.27,0,0,1-.4-.9V87.9H1154q-7.65,0-11.4,8.1l-37.8,107.2a1.05,1.05,0,0,1-1.1.8h-20.9c-.5,0-.8-.3-1.1-.8L1044.1,96q-3.75-8.1-11.4-8.1h-15.4V202.8a1,1,0,0,1-.4.9,1.27,1.27,0,0,1-.9.4H990.4a1,1,0,0,1-.8-.4,1.27,1.27,0,0,1-.4-.9V65.2a1,1,0,0,1,.4-.9,1.23,1.23,0,0,1,.8-.4H1042a26.2,26.2,0,0,1,2.8.1,26.52,26.52,0,0,1,13.9,6,28.54,28.54,0,0,1,8.6,12.8l26.1,74.6,25.9-74.6a30.36,30.36,0,0,1,8.8-12.8,25.34,25.34,0,0,1,13.9-6,24.37,24.37,0,0,1,2.7-.1h51.6a1,1,0,0,1,.9.4,1.27,1.27,0,0,1,.4.9V202.8Z" transform="translate(0 0.1)"/>
+                <path id="i" data-name="i" class="cls-1" d="M1267.6,202.9a1,1,0,0,1-.4.8,1.27,1.27,0,0,1-.9.4h-25.6a1,1,0,0,1-.8-.4,1.23,1.23,0,0,1-.4-.8V65.2a1,1,0,0,1,.4-.9,1.23,1.23,0,0,1,.8-.4h25.6a1,1,0,0,1,.9.4,1.27,1.27,0,0,1,.4.9Z" transform="translate(0 0.1)"/>
+                <path id="n" class="cls-1" d="M1481.7,65.2a1,1,0,0,1,.4-.9,1.27,1.27,0,0,1,.9-.4h25.6a1,1,0,0,1,.8.4,1.27,1.27,0,0,1,.4.9V203a1,1,0,0,1-.4.8,1.23,1.23,0,0,1-.8.4h-52.4c-10.7-.3-19.2-4.8-25.4-13.6l-65.2-97.1c-2.7-3.5-6.1-5.3-10.1-5.3h-17.9V203.1a1,1,0,0,1-.4.8,1.27,1.27,0,0,1-.9.4h-25.6a1,1,0,0,1-.8-.4,1.23,1.23,0,0,1-.4-.8V65.2a1,1,0,0,1,.4-.9,1.23,1.23,0,0,1,.8-.4h52.4a31.17,31.17,0,0,1,25.4,13.7l65.2,97c2.6,3.6,6,5.5,10.1,5.5h17.9Z" transform="translate(0 0.1)"/>
+                <path id="g" class="cls-1" d="M1712,180.1a12.3,12.3,0,0,0,12.1-12.1V135.2a1.2,1.2,0,0,1,1.1-1.3h25.6a1,1,0,0,1,.9.4,1.27,1.27,0,0,1,.4.9V168a34.36,34.36,0,0,1-10.6,25.4,34.81,34.81,0,0,1-25.6,10.6h-124a39.95,39.95,0,0,1-40.1-40.1v-60a39.95,39.95,0,0,1,40.1-40.1h158.9a1,1,0,0,1,.9.4,1.27,1.27,0,0,1,.4.9V86.7a1,1,0,0,1-.4.8,1.27,1.27,0,0,1-.9.4H1591.9a11.26,11.26,0,0,0-8.5,3.6,11.87,11.87,0,0,0-3.5,8.5v68a11.87,11.87,0,0,0,3.5,8.5,11.41,11.41,0,0,0,8.5,3.6Z" transform="translate(0 0.1)"/>
+            </g>
+
+            <g id="lines">
+                <path id="i_s" class="st0" d="M126.4,202.9c0,0.3-0.1,0.5-0.4,0.8c-0.2,0.2-0.5,0.4-0.9,0.4H99.4c-0.3,0-0.5-0.1-0.8-0.4
+                    c-0.2-0.2-0.4-0.5-0.4-0.8V65.2c0-0.4,0.1-0.7,0.4-0.9c0.2-0.2,0.5-0.4,0.8-0.4H125c0.4,0,0.7,0.1,0.9,0.4c0.2,0.2,0.4,0.5,0.4,0.9
+                    L126.4,202.9L126.4,202.9z"/>
+                <path id="i_s2" class="st0" d="M126.4,202.9c0,0.3-0.1,0.5-0.4,0.8c-0.2,0.2-0.5,0.4-0.9,0.4H99.4c-0.3,0-0.5-0.1-0.8-0.4
+                    c-0.2-0.2-0.4-0.5-0.4-0.8V65.2c0-0.4,0.1-0.7,0.4-0.9c0.2-0.2,0.5-0.4,0.8-0.4H125c0.4,0,0.7,0.1,0.9,0.4c0.2,0.2,0.4,0.5,0.4,0.9
+                    L126.4,202.9L126.4,202.9z"/>
+                <path id="i_q" class="st0" d="M386.4,202.9c0,0.3-0.1,0.5-0.4,0.8c-0.2,0.2-0.5,0.4-0.9,0.4h-25.7c-0.3,0-0.5-0.1-0.8-0.4
+                    c-0.2-0.2-0.4-0.5-0.4-0.8V65.2c0-0.4,0.1-0.7,0.4-0.9c0.2-0.2,0.5-0.4,0.8-0.4H385c0.4,0,0.7,0.1,0.9,0.4c0.2,0.2,0.4,0.5,0.4,0.9
+                    v137.7H386.4z"/>
+                <path id="i_u" class="st0" d="M649.4,202.9c0,0.3-0.1,0.5-0.4,0.8c-0.2,0.2-0.5,0.4-0.9,0.4h-25.7c-0.3,0-0.5-0.1-0.8-0.4
+                    c-0.2-0.2-0.4-0.5-0.4-0.8V65.2c0-0.4,0.1-0.7,0.4-0.9c0.2-0.2,0.5-0.4,0.8-0.4H648c0.4,0,0.7,0.1,0.9,0.4c0.2,0.2,0.4,0.5,0.4,0.9
+                    v137.7H649.4z"/>
+                <path id="i_e" class="st0" d="M921.4,202.9c0,0.3-0.1,0.5-0.4,0.8c-0.2,0.2-0.5,0.4-0.9,0.4h-25.7c-0.3,0-0.5-0.1-0.8-0.4
+                    c-0.2-0.2-0.4-0.5-0.4-0.8V65.2c0-0.4,0.1-0.7,0.4-0.9c0.2-0.2,0.5-0.4,0.8-0.4H920c0.4,0,0.7,0.1,0.9,0.4c0.2,0.2,0.4,0.5,0.4,0.9
+                    v137.7H921.4z"/>
+                <path id="i_e2" class="st0" d="M1186.4,202.9c0,0.3-0.1,0.5-0.4,0.8c-0.2,0.2-0.5,0.4-0.9,0.4h-25.7c-0.3,0-0.5-0.1-0.8-0.4
+                    c-0.2-0.2-0.4-0.5-0.4-0.8V65.2c0-0.4,0.1-0.7,0.4-0.9c0.2-0.2,0.5-0.4,0.8-0.4h25.6c0.4,0,0.7,0.1,0.9,0.4
+                    c0.2,0.2,0.4,0.5,0.4,0.9L1186.4,202.9L1186.4,202.9z"/>
+                <path id="i_x" class="st0" d="M1441.4,202.9c0,0.3-0.1,0.5-0.4,0.8c-0.2,0.2-0.5,0.4-0.9,0.4h-25.7c-0.3,0-0.5-0.1-0.8-0.4
+                    c-0.2-0.2-0.4-0.5-0.4-0.8V65.2c0-0.4,0.1-0.7,0.4-0.9c0.2-0.2,0.5-0.4,0.8-0.4h25.6c0.4,0,0.7,0.1,0.9,0.4
+                    c0.2,0.2,0.4,0.5,0.4,0.9L1441.4,202.9L1441.4,202.9z"/>
+                <path id="i_e3" class="st0" d="M1712.4,202.9c0,0.3-0.1,0.5-0.4,0.8c-0.2,0.2-0.5,0.4-0.9,0.4h-25.7c-0.3,0-0.5-0.1-0.8-0.4
+                    c-0.2-0.2-0.4-0.5-0.4-0.8V65.2c0-0.4,0.1-0.7,0.4-0.9c0.2-0.2,0.5-0.4,0.8-0.4h25.6c0.4,0,0.7,0.1,0.9,0.4
+                    c0.2,0.2,0.4,0.5,0.4,0.9L1712.4,202.9L1712.4,202.9z"/>
+            </g>
+
+        </defs>
+            
+        </svg>
+
+        <svg id="svgLogoSmallX" data-name="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 272.3">
+            
+               
+                    <path id="smallX" class="st0" d="M1494.2,84.4c-4,0-7.5,1.6-10.3,4.9l-37.2,45.8l37.2,45.8c2.9,3.2,6.3,4.8,10.3,4.8h43.1
+                        c0.3,0,0.6,0.1,0.8,0.4c0.3,0.3,0.4,0.6,0.4,1v23.8c0,0.4-0.1,0.7-0.4,1c-0.3,0.3-0.5,0.4-0.8,0.4h-45.7
+                        c-11.9,0-22.2-4.9-30.9-14.7l-32.4-40l-32.4,40c-8.6,9.8-18.9,14.7-30.9,14.7h-45.7c-0.3,0-0.6-0.1-0.8-0.4c-0.3-0.3-0.4-0.6-0.4-1
+                        v-23.8c0-0.4,0.1-0.7,0.4-1c0.3-0.3,0.5-0.4,0.8-0.4h43.1c4,0,7.5-1.6,10.3-4.8l37.2-45.8l-37.2-45.8c-2.9-3.3-6.3-4.9-10.2-4.9
+                        h-43.2c-0.3,0-0.6-0.1-0.8-0.4c-0.3-0.3-0.4-0.5-0.4-0.8V59.2c0-0.3,0.1-0.6,0.4-0.8c0.3-0.3,0.5-0.4,0.8-0.4h45.7
+                        c11.9,0,22.2,4.9,30.9,14.7l32.4,40l32.6-40c8.5-9.8,18.8-14.7,30.7-14.7h45.7c0.3,0,0.6,0.1,0.8,0.4c0.3,0.3,0.4,0.5,0.4,0.8v23.9
+                        c0,0.3-0.1,0.6-0.4,0.8c-0.3,0.3-0.5,0.4-0.8,0.4H1494.2z"/>
+                
+            
+        </svg>
+    </div>
+
+    <div id="menuEnd">TEST</div>
+    <div id="logTxt">TEST</div>
+
+    <div id="menu">
+        <div id="menuHandle" onclick="menuHandlePress()">
+            <img class="menuLogoImg" src="menuIconEdit.svg">
+        </div>
+        <div class="menuItemCurrent" id="menuItemCurrentTitle" onclick="menuHandlePress()">
+            PRESS TO CLOSE
+        </div>
+        <div id="menuItemsHolder">
+            <!-- <div class="menuItem" onmouseover="menuItemMouseOver(0)" onmouseleave="menuItemMouseLeave(0)" id="menuItem0" onClick="window.location.reload()">
+                Intro
+            </div> -->
+            <div class="menuItem" onmouseover="menuItemMouseOver(1)" onmouseleave="menuItemMouseLeave(1)" id="menuItem1" onclick="loadPage(1)">
+                How it works
+            </div>
+            <div class="menuItem" onmouseover="menuItemMouseOver(2)" onmouseleave="menuItemMouseLeave(2)" id="menuItem2" onclick="loadPage(2)">
+                TOKENS
+            </div>
+            <!-- <div class="menuItem" onmouseover="menuItemMouseOver(3)" onmouseleave="menuItemMouseLeave(3)" id="menuItem3" onclick="loadPage(3)">
+                MODEL
+            </div> -->
+            <div class="menuItem" onmouseover="menuItemMouseOver(3)" onmouseleave="menuItemMouseLeave(3)" id="menuItem3" onclick="loadPage(3)">
+                Physical Delivery
+            </div>
+            <!-- <div class="menuItem" onmouseover="menuItemMouseOver(5)" onmouseleave="menuItemMouseLeave(5)" id="menuItem5" onclick="loadPage(5)">
+                JORC Verification
+            </div> -->
+            <div class="menuItem" onmouseover="menuItemMouseOver(4)" onmouseleave="menuItemMouseLeave(4)" id="menuItem4" onclick="loadPage(4)">
+                Miner Benefits
+            </div>
+            <div class="menuItem" onmouseover="menuItemMouseOver(5)" onmouseleave="menuItemMouseLeave(5)" id="menuItem5" onclick="loadPage(5)">
+                Buyer Benefits
+            </div>
+            <div class="menuItem" onmouseover="menuItemMouseOver(6)" onmouseleave="menuItemMouseLeave(6)" id="menuItem6" onclick="loadPage(6)">
+                Reserves
+            </div>
+            <!-- <div class="menuItem" onmouseover="menuItemMouseOver(9)" onmouseleave="menuItemMouseLeave(9)" id="menuItem9" onclick="loadPage(9)">
+                Whitepaper
+            </div> -->
+            <div class="menuItem" onmouseover="menuItemMouseOver(7)" onmouseleave="menuItemMouseLeave(7)" id="menuItem7" onclick="loadPage(7)">
+                Team
+            </div>
+            <div class="menuItem" onmouseover="menuItemMouseOver(8)" onmouseleave="menuItemMouseLeave(8)" id="menuItem8" onclick="loadPage(8)">
+                Wallet & Dex
+            </div>
+            <!-- <div class="menuItem" onmouseover="menuItemMouseOver(9)" onmouseleave="menuItemMouseLeave(9)" id="menuItem9" onclick="loadPage(9)">
+                Exchanges / BUY
+            </div> -->
+            <!-- <div class="menuItem" onmouseover="menuItemMouseOver(13)" onmouseleave="menuItemMouseLeave(13)" id="menuItem13">
+                Contact
+            </div> -->
+        </div>
+    </div>
+            
+    <div class="content content--canvas" onclick="tryMenu()">
+        <canvas id="bgCanvas"></canvas>
+        <div id="threejs_container">
+            <div id="container_logzbuf"></div>                
+        </div>
+        <svg id="logoMain" class="neon" width="50%" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 272.3">
+            <use xlink:href="#logoSVG" />
+        </svg>
+    </div>
+
+    <div id="page0" data-title="PRESS TO OPEN">  
+        <div id="white"></div>
+        <div id="black"></div>
+    </div>
+
+    <div id="page1" class="mainPage" data-title="How it works">
+        <div class="sectionA" id="page1-secA" onclick="tryMenu()">
+            <div class="bullet-container">
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Direct Connection</div><div class='bullet-text'>Squeexe connects consumers directly with miners, eliminating middlemen.</div></div>
+                
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Tokenisation</div><div class='bullet-text'>Precious metal reserves are tokenised, allowing for digital trade and redemption.</div></div>
+
+                <div class="bullet">
+                    <div class="bullet-title"><span class='nebula'>X</span> Redemption Conditions</div>
+                    <div class='bullet-text'>Tokens mature into stable coins under specific conditions, which can then be exchanged for physical metals.</div>
+                </div>
+
+            </div>
+        </div>
+        <div class="sectionB" id="page1-secB" onclick="tryMenu()">
+            <!-- <div class="sectionB-title">How it works</div> -->
+            <div class="sectionB-text">
+                At Squeexe, we tokenise precious metal reserves to provide them digitally.
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Au1 & Ag1 Tokens -->
+    <div id="page2" class="mainPage" data-title="Tokens">
+        <div class="sectionA" id="page2-secA" onclick="tryMenu()">
+            <div class="bullet-container">
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Dual State Tokens</div><div class='bullet-text'>Ag77 & Ag47 are available at below market rate and mature into stable coins as Ag1 (which can be be redeemed for Silver). By existing in two different states, our tokens have advantages of both speculative and stable coins.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Physical Redemption</div><div class='bullet-text'>Tokens convert based on metal spot prices, like Ag47 to Ag1 when Silver passes $47.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Available on Leading Exchanges</div><div class='bullet-text'>Ag47 and Ag77 will be released soon on leading exchange, please see <a href="#">Exchange Partners</a> for more information.</div></div>
+            </div>
+        </div>
+        <div class="sectionB" id="page2-secB" onclick="tryMenu()">
+            <!-- <div class="sectionB-title">Ag1, Ag47 & Ag77 Tokens</div> -->
+            <div class="sectionB-text">
+                Our unique token system provides investors with a direct and discounted access to precious metals, revolutionizing the way we view metal investments. 
+            </div>
+        </div>
+    </div>
+
+   <!-- Page 3: Physical Delivery -->
+    <div id="page3" class="mainPage" data-title="Physical Delivery">
+        <div class="sectionA" id="page3-secA" onclick="tryMenu()">
+            <div class="bullet-container">
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Token Redemption</div><div class='bullet-text'>Matured tokens can be exchanged for physical metals.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Direct Access</div><div class='bullet-text'>Investors get metals at significant discounts compared to other mediums.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Trustworthy Process</div><div class='bullet-text'>Redemption conditions ensure a transparent and reliable exchange.</div></div>
+            </div>
+        </div>
+        <div class="sectionB" id="page3-secB" onclick="tryMenu()">
+            <!-- <div class="sectionB-title">Physical Delivery</div> -->
+            <div class="sectionB-text">
+                Owning physical precious metals is just a token away, ensuring a direct and discounted access for all investors.
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 4: Miner Benefits -->
+    <div id="page4" class="mainPage" data-title="Miner Benefits">
+        <div class="sectionA" id="page4-secA" onclick="tryMenu()">
+            <div class="bullet-container">
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Recapitalisation</div><div class='bullet-text'>Miners can recapitalize their unmined minerals by pre-selling up to 50% of current reserves.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Direct Sales</div><div class='bullet-text'>By selling directly to consumers, metals are offered below market price.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Whitepaper</div><div class='bullet-text'>For a thorough understanding of Squeexe, our whitepaper provides detailed insights, terms, and technical information.</div></div>
+            </div>
+        </div>
+        <div class="sectionB" id="page4-secB" onclick="tryMenu()">
+            <!-- <div class="sectionB-title">Miner Benefits</div> -->
+            <div class="sectionB-text">
+                The Squeexe Perpetual Model offers a win-win for both miners and investors, ensuring fair prices with a direct connection to the market.
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 5: Buyer Benefits -->
+    <div id="page5" class="mainPage" data-title="Buyer Benefits">
+        <div class="sectionA" id="page5-secA" onclick="tryMenu()">
+            <div class="bullet-container">
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Discounted Metals</div><div class='bullet-text'>Direct sales mean metals are available below market prices.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Physical Redemption</div><div class='bullet-text'>Direct access to physical metals upon token maturity.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> No Storage Fee or Liquidation Risk</div><div class='bullet-text'>Amplify your Silver investment gains without risk of liquidation while paying no storage, management or selling fees.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Asset Liquidity & Utility</div><div class='bullet-text'>Squeexe Ag1 tokens and their immature versions are listed on major exchanges and crypto services including centralised and decentralised options to bring as much liquidity, convenience and utility to the users as possible.</div></div>
+            </div>
+        </div>
+        <div class="sectionB" id="page5-secB" onclick="tryMenu()">
+            <!-- <div class="sectionB-title">Buyer Benefits</div> -->
+            <div class="sectionB-text">
+                Investors benefit from purchasing precious metal at a discount without storage fees or liquidation risk.
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 6: Principle Reserve -->
+    <div id="page6" class="mainPage" data-title="Principle Reserve">
+        <div class="sectionA" id="page6-secA" onclick="tryMenu()">
+            <div class="bullet-container">
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Independent Verification</div><div class='bullet-text'>Through the Joint Ore Reserve Committee (JORC) certification.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Size & Location</div><div class='bullet-text'>Up to * in-ground precious metal reserves are available to be tokenised</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Fully Operational</div><div class='bullet-text'>Monetize previously inaccessible reserves inside a fully operational mine that is ready to extract as soon as its viable without delays.</div></div>
+            </div>
+        </div>
+        <div class="sectionB" id="page6-secB" onclick="tryMenu()">
+            <!-- <div class="sectionB-title">Principle Reserve</div> -->
+            <div class="sectionB-text">
+                Our commitment to JORC verification guarantees that our precious metal reserves are of the highest industry standards, ensuring trust and reliability.
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 7: Team -->
+    <div id="page7" class="mainPage" data-title="Team">
+        <div class="sectionA" id="page7-secA" onclick="tryMenu()">
+            <div class="bullet-container">
+                
+            </div>
+        </div>
+        <div class="sectionB" id="page7-secB" onclick="tryMenu()">
+            <!-- <div class="sectionB-title">Team</div> -->
+            <div class="sectionB-text">
+                Meet the passionate individuals behind Squeexe, combining diverse expertise to revolutionize the precious metal industry.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Page8: Wallet & Dex -->
+    <div id="page8" class="mainPage" data-title="Wallet & Dex">
+        <div class="sectionA" id="page8-secA" onclick="tryMenu()">
+            <div class="bullet-container">
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Squeexe Wallet</div><div class='bullet-text'>A secure and user-friendly wallet to store and manage your tokens.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> User Custody</div><div class='bullet-text'> Our native wallet enables full user custody of all Squeexe tokens and 1000's of other assets all in one convenient and secure place</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Cross-chain Decentralized Exchange</div><div class='bullet-text'>Trade tokens directly user-to-user without intermediaries for enhanced security and control. Seamlessly exchange tokens across different blockchains.</div></div>
+            </div>
+        </div>
+        <div class="sectionB" id="page8-secB" onclick="tryMenu()">
+            <!-- <div class="sectionB-title">Wallet & Dex</div> -->
+            <div class="sectionB-text">
+                Squeexe offers a user-friendly wallet and decentralized exchange platform, ensuring secure and efficient token management and trading.
+            </div>
+        </div>
+    </div>
+
+    <!-- Page9: Exchanges / Buy -->
+    <!-- <div id="page9" class="mainPage" data-title="Exchanges / Buy">
+        <div class="sectionA" id="page9-secA" onclick="tryMenu()">
+            <div class="bullet-container">
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> Binance</div><div class='bullet-text'>Squeexe tokens are listed on leading centralized exchanges for easy access.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> KuCoin</div><div class='bullet-text'>Buy tokens directly from our platform or through partnered exchanges.</div></div>
+                <div class="bullet"><div class="bullet-title"><span class='nebula'>X</span> CoinEx</div><div class='bullet-text'>Enjoy high liquidity, market awareness, and easy token acquisition.</div></div>
+            </div>
+        </div>
+        <div class="sectionB" id="page9-secB" onclick="tryMenu()"> -->
+            <!-- <div class="sectionB-title">Exchanges / Buy</div> -->
+            <!-- <div class="sectionB-text">
+                Acquiring Squeexe tokens is a breeze with our multiple exchange listings and direct purchase options, ensuring convenience and accessibility for all investors.
+            </div>
+        </div>
+    </div> -->
+
+
+
+    <div id="contactDiv" onMouseUp="javascript:window.location='https://twitter.com/silverreserves'">
+            <!-- <div class="contactIcon" id="twitter" 
+                 onMouseUp="javascript:window.location='https://twitter.com/silverreserves'">
+                <svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 0 335 276" fill="#fff">
+                  <path d="m302 70a195 195 0 0 1 -299 175 142 142 0 0 0 97 -30 70 70 0 0 1 -58 -47 70 70 0 0 0 31 -2 70 70 0 0 1 -57 -66 70 70 0 0 0 28 5 70 70 0 0 1 -18 -90 195 195 0 0 0 141 72 67 67 0 0 1 116 -62 117 117 0 0 0 43 -17 65 65 0 0 1 -31 38 117 117 0 0 0 39 -11 65 65 0 0 1 -32 35"/>
+                </svg>
+            </div> -->
+    </div>
+
+</body>
+<script type="text/javascript">
+
+let bigXrect = document.getElementById('bigX').getBoundingClientRect();
+
+// navigation system
+let menuOpen = false;
+let currentPage = 1;
+const maxPage = 9;
+let playForward, setPause, menuReveal;
+let mouseActivated = false;
+let menuActivated = false;
+let canScroll = false;
+let introFin = false;
+let runOnce = false;
+
+const startedAt = Date.now();
+let dBg = false; //debugging
+let sAs = false; //simple analytics
+let dLog = dBg ? document.getElementById("logTxt") : ""; //debugging
+let isLandScp, minAxis, isPhone;
+let menuSmall, menuBig;
+let menuTL = new TimelineMax({paused:true});
+let isInit = false;
+let resized = false;
+let medeaState = 0; //1 = phone landscape, 2 = phone potrait, 3 = other
+
+function txtLog(msgtxt){
+    if(dBg) console.log("TXT LOG: " + msgtxt);
+}
+
+function sizeMenu(){
+    let reWidth;
+    let menuItmY;
+    let flxA;
+    if(resized){
+        menuTL.progress(0);
+        menuTL.clear();
+        menuOpen = false;     
+        if(!menuActivated) gsap.to('#menuItemCurrentTitle', 0.5, { scrambleText:{text:'PRESS TO OPEN',speed:1}});
+    }
+    if(dBg) dLog.innerHTML = "width " + innerWidth + " - height " + innerHeight;
+    menuSmall = medeaState == 3 ? 94 : 70;
+    gsap.set('.menuLogoImg', {width:'100%', marginTop:'-10px'});
+    gsap.set('#menuItemsHolder', { visibility: 'collapse' });
+    if (isPhone) {
+        gsap.set('html', {background:'content-box radial-gradient(#151a27 35% 25%, #07090d 90% 50%)'});
+        gsap.set('body', {background:'content-box radial-gradient(#151a27 35% 25%, #07090d 90% 50%)'});
+        gsap.set('#menu', { width:'160px', left:'4px', top:'4px' });
+        gsap.set('.menuItemCurrent', {fontSize:'15px', marginTop:'-11%'});
+        flxA = (window.innerHeight - ((window.innerWidth * 0.025 + 4) + (menuSmall + 4)));
+        gsap.set('.sectionA', {maxHeight:flxA + 'px'});
+        gsap.set('.bullet-text', {fontSize:'clamp(3.5mm, 5vmin, 7mm)'});
+        gsap.set('.bullet-title', {fontSize:'clamp(4.0mm, 3vmax, 10mm);'});
+        gsap.set('.sectionB-text', {fontSize:'clamp(6mm, 3vmax, 10mm)'});
+        if(dBg) console.log("flxA: " + flxA);
+        if(medeaState == 1){
+            //menuBig = minAxis - 12;
+            //gsap.to('#menuItemCurrentTitle', 0.5, { scrambleText:{text:currentPageDiv.dataset.title,speed:1}});
+            //menuBig = 100 + (minAxis * 0.6);
+            reWidth = minAxis * 0.9;
+            gsap.set('.menuItem', { fontSize:((minAxis - 16) * 0.078) + 'px', opacity:1});
+            gsap.set('#menuEnd', { fontSize:((minAxis - 16) * 0.078) + 'px'});
+            gsap.set('.sectionB', { maxWidth:(window.innerWidth - 180) + 'px', right:'4px', top:'4px' });
+        }else if(medeaState == 2){;
+            //menuBig = 72 + (window.innerHeight * 0.38);
+            reWidth = minAxis - 12;
+            // gsap.set('.menuItem', { fontSize:(menuBig * 0.07) + 'px', opacity:1});
+            // gsap.set('#menuEnd', { fontSize:(menuBig * 0.07) + 'px'});
+            gsap.set('.menuItem', { fontSize:((minAxis - 16) * 0.078) + 'px', opacity:1});
+            gsap.set('#menuEnd', { fontSize:((minAxis - 16) * 0.078) + 'px'});
+            gsap.set('.sectionB', { maxWidth:(window.innerWidth - 176) + 'px', right:'4px', top:'4px' });
+        }
+        menuItmY = (document.getElementById('menuEnd').getBoundingClientRect().height + (window.innerHeight * 0.0047));
+        menuBig = (window.innerHeight * 0.0047) + ((8 * Math.round(menuItmY)) + 4); //padding + (9 * (menuItems height + padding)) + 4 extra buffer
+        if(dBg) console.log("added: " + menuBig);
+        menuTL.to('#menuItemsHolder', { visibility: 'visible', marginTop: '0px'})
+        .from('.menuItem', 0.2, { opacity:0, stagger:0.05 }, 0)
+        .to('#menu', 0.25, { background:'rgba(0, 0, 0, .5)' }, 0)
+        .pause()
+        .to('.menuLogoImg', {width:'0%', visibility: 'collapse'}, "<")
+        .to('.menuItemCurrent', {visibility: 'collapse', marginTop:'0px', fontSize: '0px', padding: '0px'}, "<")
+        .to('#menu', 0.25, { width:reWidth, background:'rgba(0, 0, 0, .7)' }, 0)
+        .fromTo('#menu', 0.5, { height:menuSmall }, { height:menuBig}, 0);
+        //.to('#menu', { width:reWidth, background:'rgba(0, 0, 0, .7)' }, 0);
+        // let lastItm = document.getElementById('menuEnd');
+        // if(dBg) console.log("lastItm y: " + lastItm.getBoundingClientRect().height);
+        // if(dBg) console.log("menuItemsH.y: " + document.getElementById('menuItemsHolder').getBoundingClientRect().height);
+        // if(dBg) console.log("menuEnd.y: " + document.getElementById('menuEnd').getBoundingClientRect().height);
+    }else if(medeaState == 3){
+        gsap.set('html', {background:'content-box radial-gradient(#0e111a 35% 25%, #000000 90% 50%)'});
+        gsap.set('body', {background:'content-box radial-gradient(#0e111a 35% 25%, #000000 90% 50%)'});
+        //menuBig = 100 + (window.innerHeight * 0.31);
+        gsap.set('.menuItemCurrent', {fontSize:'21px', marginTop:'-10%'});
+        gsap.set('.menuItem', { fontSize:'1.8vh', opacity:1});
+        gsap.set('#menuEnd', { fontSize:'1.8vh'});
+        gsap.set('#menu', { width:'200px', left:'24px', top:'48px' });
+        gsap.set('.sectionB', { maxWidth:(window.innerWidth - 250) + 'px', right:'12px', top:'48px' });
+        menuItmY = (document.getElementById('menuEnd').getBoundingClientRect().height + (window.innerHeight * 0.0047));
+        menuBig = menuSmall + ((8 * Math.round(menuItmY)) + 4); //small menu + (9 * (menuItems height + padding)) + 4 extra buffer
+        if(dBg) console.log("added: " + menuBig);
+        flxA = (window.innerHeight - ((window.innerWidth * 0.025 + 48) + (menuSmall + 4)));
+        gsap.set('.sectionA', {maxHeight:flxA + 'px'});
+        if(dBg) console.log("flxA: " + flxA);
+        gsap.set('.bullet-text', {fontSize:'clamp(3.5mm, 5vmin, 7mm)'});
+        gsap.set('.bullet-title', {fontSize:'clamp(4.0mm, 3vmax, 10mm);'});
+        gsap.set('.sectionB-text', {fontSize:'clamp(6mm, 3vmax, 10mm)'});
+        menuTL.to('#menuItemsHolder', { visibility: 'visible', overflow: 'visible'})
+        .from('.menuItem', 0.2, { opacity:0, stagger:0.05 }, 0)
+        .to('#menu', 0.25, { background:'rgba(0, 0, 0, .5)' }, 0)
+        .pause()
+        .fromTo('#menu', 0.5, { height:menuSmall }, { height:menuBig}, 0);
+        // if(dBg) console.log("menuTL %: " + menuTL.progress());
+        // if(dBg) console.log("menuEnd.y: " + document.getElementById('menuEnd').getBoundingClientRect().height);
+    }
+}
+
+function checkReso(grabState = false){
+    isLandScp = window.innerWidth >= window.innerHeight ? true : false;
+    minAxis = isLandScp ? window.innerHeight : window.innerWidth;
+    isPhone = minAxis <= 601 ? true : false;
+    if(grabState){
+        let tmpState = !isPhone ? 3 : isLandScp ? 1 : 2;
+        return tmpState
+    }
+}
+
+function onResize() {
+    let checkState = checkReso(true);
+    medeaState = checkState;
+    sizeMenu();
+    if (isPhone) {
+        // portrait
+        TweenLite.to('#logoMain', .1, { width:'80%' });
+    } else {
+        // landscape
+        TweenLite.to('#logoMain', .1, { width:'50%' });
+    }
+    resized = true;
+    if(dBg) console.log('resize');
+}
+
+onResize();
+addEventListener("resize", onResize);
+    
+window.requestAnimationFrame = (function(){
+    return  window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            function (callback) {
+                window.setTimeout(callback, 1000 / 60);             
+            };
+})();
+
+
+const svgLetters = {};
+svgLetters.midX = "M1532.6,26.4a13.24,13.24,0,0,0-10.3,4.9l-75.6,106.1L1522.3,241a13.62,13.62,0,0,0,10.3,4.8h4.1a.91.91,0,0,1,.8.4,1.28,1.28,0,0,1,.4,1v23.7a1.28,1.28,0,0,1-.4,1,1.23,1.23,0,0,1-.8.4H1530c-11.9,0-23.2-3.3-31.8-13.1l-71.1-96.5-68.3,94.9c-8.6,9.8-18.9,14.7-30.8,14.7h-7.4a.91.91,0,0,1-.8-.4,1.28,1.28,0,0,1-.4-1V247.2a1.28,1.28,0,0,1,.4-1,1.23,1.23,0,0,1,.8-.4h4.8a13.15,13.15,0,0,0,10.3-4.8L1409,138,1335,34c-2.9-3.3-5.6-7.7-9.5-7.7h-5a.91.91,0,0,1-.8-.4,1.27,1.27,0,0,1-.4-.9V1.2a1.22,1.22,0,0,1,.4-.9,1.23,1.23,0,0,1,.8-.4h7.4c11.9,0,21.3,6.5,30,16.2l70.3,95.4,71.1-97C1507.9,4.9,1518.1,0,1530,0h6.7a1.22,1.22,0,0,1,1.2,1.2V25.1a.91.91,0,0,1-.4.8,1.23,1.23,0,0,1-.8.4Z";
+svgLetters.z = "M1320.82,211.51,1464.11,81.28H1320.82q0-2.16,2.37-6.16a47.71,47.71,0,0,1,6-8,49.47,49.47,0,0,1,7.75-6.93q4.08-2.92,7.53-2.93H1536L1392.25,187.49H1536c0,1.44-.79,3.5-2.36,6.16a48.82,48.82,0,0,1-6,8,49.79,49.79,0,0,1-7.74,6.92c-2.73,2-5.24,2.93-7.53,2.93Z";
+svgLetters.bigX = "M1532.6,26.4a13.24,13.24,0,0,0-10.3,4.9l-75.6,106.1L1522.3,241a13.62,13.62,0,0,0,10.3,4.8h110.1a.91.91,0,0,1,.8.4,1.28,1.28,0,0,1,.4,1v23.7a1.28,1.28,0,0,1-.4,1,1.23,1.23,0,0,1-.8.4H1530c-11.9,0-23.2-3.3-31.8-13.1l-71.1-96.5-68.3,94.9c-8.6,9.8-18.9,14.7-30.8,14.7H1211.6a.91.91,0,0,1-.8-.4,1.28,1.28,0,0,1-.4-1V247.2a1.28,1.28,0,0,1,.4-1,1.23,1.23,0,0,1,.8-.4h113.8a13.15,13.15,0,0,0,10.3-4.8L1409,138,1335,34c-2.9-3.3-5.6-7.7-9.5-7.7h-114a.91.91,0,0,1-.8-.4,1.27,1.27,0,0,1-.4-.9V1.2a1.22,1.22,0,0,1,.4-.9,1.23,1.23,0,0,1,.8-.4h116.4c11.9,0,21.3,6.5,30,16.2l70.3,95.4,71.1-97C1507.9,4.9,1518.1,0,1530,0h112.7a1.22,1.22,0,0,1,1.2,1.2V25.1a.91.91,0,0,1-.4.8,1.23,1.23,0,0,1-.8.4Z";
+svgLetters.smallX="M1494.2,84.4a13.06,13.06,0,0,0-10.3,4.9l-37.2,45.8,37.2,45.8a13.42,13.42,0,0,0,10.3,4.8h43.1a.91.91,0,0,1,.8.4,1.28,1.28,0,0,1,.4,1v23.8a1.28,1.28,0,0,1-.4,1,1,1,0,0,1-.8.4h-45.7q-17.85,0-30.9-14.7l-32.4-40-32.4,40q-12.9,14.7-30.9,14.7h-45.7a.91.91,0,0,1-.8-.4,1.28,1.28,0,0,1-.4-1V187.1a1.28,1.28,0,0,1,.4-1,1,1,0,0,1,.8-.4h43.1a13.27,13.27,0,0,0,10.3-4.8l37.2-45.8-37.2-45.8a13.15,13.15,0,0,0-10.2-4.9h-43.2a.91.91,0,0,1-.8-.4,1,1,0,0,1-.4-.8v-24a.91.91,0,0,1,.4-.8,1,1,0,0,1,.8-.4H1365q17.85,0,30.9,14.7l32.4,40,32.6-40c8.5-9.8,18.8-14.7,30.7-14.7h45.7a.91.91,0,0,1,.8.4,1,1,0,0,1,.4.8V83.1a.91.91,0,0,1-.4.8,1,1,0,0,1-.8.4h-43.1Z";
+
+// function playVid(onlyPause = false){
+//     let vid = document.getElementById("hiw-vid");
+//     if(vidPlaying || onlyPause){
+//         vid.pause();
+//         vidPlaying = false;
+//     }else{
+//         vid.play();
+//         vidPlaying = true;
+//     }
+// }
+
+function coinsOff(){
+    if(currentPage != 2){
+        window.js.AgCoins.visible = false;
+        window.js.AuCoins.visible = false;
+        window.js.tokenz = false;
+    }
+}
+
+function toknOff(){
+    if(currentPage != 1){
+        window.js.coinAg.visible = false;
+        window.js.tokn = false;
+    }
+}
+
+function finIntro(){
+    if(dBg) console.log("intro: " + introFin + " - menu: " + menuActivated);
+    if(!introFin){
+        //window.js.instantiate(1);
+        loadPage(1);
+    }
+}
+
+function logoGo(){
+    if(!introFin){
+        //logoTL.timeScale(2);
+        logoTL.play()
+        setTimeout(slowLogo, 3000);
+    }
+}
+
+function slowLogo(){
+    if(!introFin){
+        logoTL.timeScale(1.5);
+    }
+}
+
+function menuInit(){
+    if(!isPhone) menuHandlePress();
+}
+
+window.js = {'textTimes':[0,0,0,0,0,0,0,0,0,0,0,0],'camera':{'position':{'z':0,'x':0,'y':0}}}; 
+gsap.registerPlugin(GSDevTools, MorphSVGPlugin);
+gsap.set('#s2', { autoAlpha:0 });
+let logoTL = window.js.logoTL = new TimelineMax({paused:true});
+let titleTL = window.js.titleTL = new TimelineMax({paused:true});
+let minLogoExitTime = 0;
+
+function init() {
+    if(dBg) dLog.style.zIndex = 99 
+    checkReso();
+    logoTL.timeScale(0.5);
+    setTimeout(logoGo, 500);
+    // gsap.set('body', {opacity:1, background:'content-box radial-gradient(#151a27 35% 25%, #07090d 90% 50%)'});
+    gsap.set('body', {opacity:1});
+    
+    logoTL
+    .set('#renderer_logzbuf', {autoAlpha:1})
+    .set('#bigX', { morphSVG:smallX } )
+    .from('#s', .2, { scaleY:0.127, alpha:0, y:"+=100", rotation:0, 
+        ease:Elastic.easeOut.config(1,0.3), transformOrigin:"center center" }, 0)
+
+    .from('#q', .2, { scaleY:0.127, alpha:0, y:"+=100", rotation:0, 
+         ease:Elastic.easeOut.config(1,0.3), transformOrigin:"center center" }, "-=.174")
+    .from('#u', .2, { scaleY:0.127, alpha:0, y:"+=100", rotation:0, 
+         ease:Elastic.easeOut.config(1,0.3), transformOrigin:"center center" }, "-=.174")
+    .from('#e', .2, { scaleY:0.127, alpha:0, y:"+=100", rotation:0, 
+         ease:Elastic.easeOut.config(1,0.3), transformOrigin:"center center" }, "-=.174")
+    .from('#e2', .2, { scaleY:0.127, alpha:0, y:"+=100", rotation:0, 
+         ease:Elastic.easeOut.config(1,0.3), transformOrigin:"center center" }, "-=.174")
+    .from('#bigX', .2, { scaleY:0.127, alpha:0, y:"+=100", rotation:0, 
+         ease:Elastic.easeOut.config(1,0.3), transformOrigin:"center center"}, "-=.174")
+    .to('#bigX', .2, { morphSVG:smallX, scaleY:1, ease:Power1.easeInOut, transformOrigin:"1429px 140px"}, "-=.14")
+    .from('#e3', .2, { scaleY:0.127, alpha:0, y:"+=100", rotation:360, 
+         ease:Elastic.easeOut.config(1,0.3), transformOrigin:"center center" }, "-=.174")
+    .addLabel('squeexe')
+    .to('#bigX', 0.2, { morphSVG:svgLetters.midX, x:0, ease:Power3.easeIn}, '+0.5')
+    .to('#bigX', 0.2, { morphSVG:bigX, x:0, ease:Power3.easeOut })
+    .to('#bigX', 0.1, { morphSVG:svgLetters.midX, x:0, ease:Power0.easeOut }, ">0.25")
+    .to('#bigX', 0.4, { morphSVG:svgLetters.z }, "-=.0")
+    .to('#bigX', .1, { fill:"#c43402" }, "-=.3")
+    .to('#bigX', 0.2, { scale:0.72, repeat:1, yoyo:true, ease:Power2.easeOut }, '-=0.425')
+    .to('#bigX', 0.4, { transformOrigin:"center center", rotation:-360, ease:Power2.easeInOut }, '-=0.55')
+    .addLabel('squeeze')
+    .to('#e3', .1, { morphSVG:i_e3, ease:Power1.easeInOut, transformOrigin:"center center" }, "+=.5")
+    .to('#e3', .1, { morphSVG:g, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#bigX', .1, { morphSVG:i_x, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#bigX', .1, { morphSVG:n, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#bigX', .1, { fill:"#ffffff" }, "-=.2")
+    .to('#e2', .1, { morphSVG:i_e2, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#e2', .1, { morphSVG:i, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#e', .1, { morphSVG:i_e, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#e', .1, { morphSVG:m, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#u', .1, { morphSVG:i_u, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#u', .1, { morphSVG:o, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#q', .1, { morphSVG:i_q, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#q', .1, { morphSVG:c, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#s2', .01, { autoAlpha:1, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#s2', .2, { morphSVG:isi, scaleY:1.07, y:'+=5', x:'-=5', ease:Power2.easeIn, transformOrigin:"center center" }, '-=.09')
+    .to('#s', .2, { x:'+=105', ease:Power2.easeIn, transformOrigin:"center center" }, '-=.2')
+    .addLabel('iscoming')
+    .to('#s2', .2, { morphSVG:s2, y:'-=5', x:'+=5', scaleY:1, ease:Power2.easeIn, transformOrigin:"center center" },'+=.5')
+    .to('#s', .2, { x:'-=105', ease:Power2.easeIn, transformOrigin:"center center" }, '-=.2')
+    .to('#s2', .01, { autoAlpha:0, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#q', .1, { morphSVG:i_q, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#q', .1, { morphSVG:q, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#u', .1, { morphSVG:i_u, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#u', .1, { morphSVG:u, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#e', .1, { morphSVG:i_e, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#e', .1, { morphSVG:e, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#e2', .1, { morphSVG:i_e2, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#e2', .1, { morphSVG:e2, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#bigX', .1, { morphSVG:i_x, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.1")
+    .to('#bigX', .1, { morphSVG:smallX, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .to('#bigX', .1, { fill:"#c43402" }, "-=.2")
+    .to('#e3', .1, { morphSVG:i_e3, ease:Power1.easeInOut, transformOrigin:"center center" }, "-=.01")
+    .to('#e3', .1, { morphSVG:e3, ease:Power1.easeInOut, transformOrigin:"center center" })
+    .addLabel('squeexe2_smallX')
+    .to('#bigX', 0.2, { morphSVG:svgLetters.midX, x:0, ease:Power3.easeIn }, '+0.5')
+    .to('#bigX', 0.2, { morphSVG:bigX, x:0, ease:Power3.easeIn })
+    .addLabel('squeexe2')
+    .to('#logoMain', 1, {scale:150, ease:Expo.easeIn, transformOrigin:"79.65% 50%" }, '+=2.5')
+    .to('#logoMain', 1, {ease:Power1.easeIn, rotation:'-=40', transformOrigin:"79.65% 50%", onComplete:function(){if(dBg) console.log("FIN INTRO HERE?");} }, '-=1')
+    .to('#bigX', 0.5, {ease:Power1.easeIn, opacity: 0, onComplete:function(){if(dBg) console.log("FADE X HERE?");} }, '<0.5')
+    .set('#logoMain', { autoAlpha:0 })
+    logoTL.fromTo(window.js.camera.position, 2, { z:300 }, { z:-8, ease:Expo.easeOut}, '-=1.4')
+    minLogoExitTime = logoTL.duration();
+    logoTL.to(window.js.camera.position, 1, { z:-10, ease:Linear.easeIn, onComplete:function(){finIntro(); if(dBg) console.log("INTRO FIN -> LOADPAGE(1)");}}, '-=1.5')
+    logoTL.addLabel('end')
+
+    menuReveal = gsap.from('#menu', .25, { autoAlpha:0, onComplete:menuInit});
+    menuReveal.delay(1.5);
+
+    document.body.addEventListener("wheel", onMouseWheel);
+    document.body.addEventListener("touchmove", moveTouch, false, {passive: true});       
+    document.body.addEventListener("touchstart", startTouch, false, {passive: true});
+
+    // setPause = function(p) {
+    //     window.paused = p;
+    //     if(dBg) console.log('setPause='+p);
+    // }
+
+    menuTL.progress(0);
+    menuTL.clear();
+    menuOpen = false; 
+    onResize();
+    setTimeout(reactivateMouse, 2000);
+    isInit = true;
+    if(dBg) console.log("end init");
+};
+
+// navigation system
+function menuHandlePress(fromPageLoad = false){
+    if (menuOpen == false) {
+        menuTL.play();
+        menuOpen = true;
+        if(!menuActivated && !fromPageLoad){
+            if(dBg) console.log("OPEN MENU");
+            gsap.to('#menuItemCurrentTitle', 0.5, { scrambleText:{text:'PRESS TO CLOSE',speed:1}});
+        } 
+    } else {     
+        menuTL.reverse();
+        menuOpen = false;
+        if(!menuActivated && !fromPageLoad){
+            if(dBg) console.log("CLOSE MENU");
+            gsap.to('#menuItemCurrentTitle', 0.5, { scrambleText:{text:'PRESS TO OPEN',speed:1}});
+        }
+    }
+}
+
+function menuItemMouseOver(mID){
+    if(dBg) console.log(mID);
+    let item = document.getElementById('menuItem'+mID);
+    if (!item.tl) {
+        item.tl = gsap.to(item, 0.15, { color:"#0e111a", background:"#b7b8bb" })
+    }
+    item.tl.play();
+}
+function menuItemMouseLeave(mID){
+    if (mID != currentPage || !introFin) {
+        let item = document.getElementById('menuItem'+mID);
+        item.tl.reverse();
+    }
+}
+
+loadPage = window.js.loadPage = function(pid) {
+
+    // if (logoTL.isActive()) {
+    //     logoTL.pause();
+    //     dropIntro();
+    // }
+
+    //setTimeout(window.js.disposeObj, 2000, 1);
+
+    if(pid == 2){
+        window.js.AgCoins.visible = true;
+        window.js.AuCoins.visible = true;
+        window.js.tokenz = true;
+        if(dBg) console.log("tokenz on");
+    }else if(pid != 9){
+        if(!window.js.labeldata[pid+5].object){
+            window.js.instantiate(pid);
+            //window.js.spinObj(pid);
+            if(dBg) console.log("create obj: " + pid);
+        }else{
+            if(dBg) console.log("skip obj: " + pid);
+        }
+        setTimeout(window.js.spinObj, 600, pid);
+    }
+
+    if(!menuActivated) menuActivated = true;
+
+    let currentPageDiv = document.getElementById('page'+pid);
+    if (currentPage == pid && introFin){
+        if (!logoTL.isActive() && !titleTL.isActive()) {
+            if(dBg) console.log("returning");
+            gsap.to('#menuItemCurrentTitle', 0.5, { scrambleText:{text:currentPageDiv.dataset.title,speed:1}});
+            if(menuOpen) menuHandlePress(true);
+            return false;
+        }
+    }
+    let textTL, textOffTL;
+
+    let preMenuItem = document.getElementById('menuItem'+currentPage);
+    if (preMenuItem.pageTL) { //check previous page for '.pageTL' 
+        if(dBg) console.log('prePageTL %: ' + preMenuItem.pageTL.progress());
+        preMenuItem.pageTL.timeScale(2);
+        if (preMenuItem.pageTL.nextLabel() == 'open') {
+            preMenuItem.pageTL.tweenTo(0, 0.5);
+            if(dBg) console.log('prePageTL == OPEN');
+        } else {
+            if(dBg) console.log('prePageTL == ' + preMenuItem.pageTL.nextLabel());
+            preMenuItem.pageTL.tweenTo('end', 0.5);
+        }
+        if (preMenuItem.tl) {
+            if(dBg) console.log('reverse pageTL');
+            document.getElementById('menuItem'+currentPage).tl.reverse();
+        }
+        
+        if (currentPage > 0) {
+            // text animation is outside pageTL (so it can be interrupted)
+            if (preMenuItem.textOnTL) preMenuItem.textOnTL.pause();
+            preMenuItem.textOffTL = new TimelineMax();
+            if(preMenuItem.secB.chars.length > 0) {
+                preMenuItem.textOffTL.to(preMenuItem.secB.chars, 0.5, { autoAlpha:0, scale:1.5, stagger:{ 
+                    each: 0.02,
+                    from: "start", }}, 0.25)
+            }
+            if(dBg) console.log('previous secA.lines.length: ' + preMenuItem.secA.lines.length);
+            if(preMenuItem.secA.lines.length > 0) {
+                preMenuItem.textOffTL.to(preMenuItem.secA.lines, 0.6, {opacity: 0, y:'+=60', stagger:{
+                    each: 0.2,
+                    ease:"sine.in",
+                    from: "end", }}, 0.5)
+            }
+            preMenuItem.textOffTL.add('off')
+            .tweenTo('off', 1.5);
+        }
+    }
+
+    let menuItem = document.getElementById('menuItem'+pid);
+    if (!menuItem.tl) {
+            menuItem.tl = gsap.to(menuItem, 0.15, { color:"#000000", background:"#FFFFFF" });
+    }
+
+    gsap.to('#menuItemCurrentTitle', 0.5, { scrambleText:{text:currentPageDiv.dataset.title,speed:1}});
+
+    if(menuOpen == true){
+        menuHandlePress(true); // close menu
+    }
+
+    if (!menuItem.pageTL) {
+        if(dBg) console.log('loadpage -> !menuitem.pageTL');
+        let sectionBtext = menuItem.secB = new SplitText('#page'+pid+'-secB .sectionB-text', {type:"chars, words, lines"});
+        let sectionAtext = menuItem.secA = new SplitText('#page'+pid+'-secA .bullet-container .bullet', {type:"lines"});
+        if (menuItem.secB.chars.length > 0) gsap.set(menuItem.secB.chars, { autoAlpha:0, scale:1.5 });
+        if (menuItem.secA.lines.length > 0) gsap.set(menuItem.secA.lines, { opacity:0, y:'+=60'});
+        if(dBg) console.log('!menuItem.pageTL -> set()');
+
+        gsap.to('#page'+pid, 0, { display:'block' }) // ##
+
+        menuItem.pageTL = new TimelineMax({paused:true});
+        menuItem.pageTL
+        .from('#page'+pid+'-secA', 0.25, { autoAlpha:0, onStart:dBug, onStartParams: ["STARTED A ", pid]}, 0)
+        .from('#page'+pid+'-secB', 0.25, { autoAlpha:0, onStart:dBug, onStartParams: ["STARTED B ", pid] }, 0)    
+        .add('open')
+        let openTime = menuItem.pageTL.duration();
+        menuItem.pageTL
+        .to('#page'+pid+'-secB', 0.5, { autoAlpha:0, onStart:dBug, onStartParams: ["STARTED B2 ", pid] }, '+=0.5')
+        .to('#page'+pid+'-secA', 2, { autoAlpha:0, onStart:dBug, onStartParams: ["STARTED A2 ", pid] }, '+=0.5')
+
+        if (pid > 0) {
+            menuItem.pageTL.from('#page'+pid, 0.25, { autoAlpha:0 }, 0)
+            .to('#page'+pid, 0.25, { autoAlpha:0 })
+            
+            if (window.js.labeldata[pid+5].object) {               
+                if (!window.js.labeldata[pid+5].objectOpacity) window.js.labeldata[pid+5].objectOpacity = .25;
+                menuItem.pageTL.to(window.js.labeldata[pid+5].objectMaterial, 1, { opacity:window.js.labeldata[pid+5].objectOpacity }, 0)
+                .to(window.js.labeldata[pid+5].objectMaterial, .5, { opacity:0 }, '-=1.5')
+            }
+        }
+        menuItem.pageTL.add('end')
+    }
+    if (menuItem.pageTL.duration() == menuItem.pageTL.time()) {
+        if(dBg) console.log('RESET menuitem.pageTL');
+        menuItem.pageTL.time(0);
+    }
+    menuItem.pageTL.timeScale(1);
+    menuItem.pageTL.tweenTo('open');
+
+
+    // reset layout non-home
+    if (pid != 0 && !menuItem.textOnTL) {
+        menuItem.textOnTL = new TimelineMax()
+        if (menuItem.secB.chars.length > 0) {
+            menuItem.textOnTL.to(menuItem.secB.chars, 0.5, { autoAlpha:1, scale:1, stagger:{ 
+                each: 0.02,
+                from: "start", }}, 0.5)
+        }
+        if (menuItem.secA.lines.length > 0) {
+            //tl.fromTo(element, { x: -100 }, { duration: 1, x: 100 });
+            if(dBg) console.log('TEXT-ON');
+            if(dBg) console.log('secA.lines: ' + menuItem.secA.lines.y);
+            menuItem.textOnTL.fromTo(menuItem.secA.lines, {y: 100}, {y:0, stagger:{
+                each: 0.2,
+                ease:"sine.in",
+                from: "start", }})
+            menuItem.textOnTL.fromTo(menuItem.secA.lines, {autoAlpha:0}, {autoAlpha: 1, duration: 2, stagger:{
+                each: 0.2,
+                ease:"sine.in",
+                from: "start", }}, "<")
+        }
+    }else{
+        if(dBg) console.log('TEXT-REPEAT');
+        menuItem.textOnTL.restart();
+    }
+
+    // 3d stuff
+    let flyTime = 2 + (0.1 * Math.abs(currentPage - pid));
+    // 3d object fly to
+    let nextZ = 0 - window.js.labeldata[pid + 5].size;
+    if(dBg) console.log('labeldata[pid+5].size: ' + window.js.labeldata[pid+5].size + " - pid: " + pid);
+    // home page specific
+    if (currentPage == 1) {
+        // minimum time the logoTL must be at on page0/home exit
+        if (logoTL.isActive() || !introFin) {
+            dropIntro(nextZ, pid);
+            if(dBg) console.log("curPage 1 -> logo active: " + logoTL.isActive());
+            //logoTL.time(0).clear();
+        } else {
+            gsap.to(window.js.camera.position, flyTime, { z:nextZ + 2, ease:Expo.easeInOut});
+        }
+    }else if(currentPage == 2){
+        gsap.to(window.js.camera.position, flyTime, { z:nextZ + 2, ease:Expo.easeInOut, onComplete:coinsOff});
+    } else {
+        gsap.to(window.js.camera.position, flyTime, { z:nextZ + 2, ease:Expo.easeInOut});
+    }
+    currentPage = pid;
+}
+
+function dBug(log1, log2 = ""){
+    if(dBg){
+        console.log(log1 + log2);
+    }
+}
+
+function onMouseWheel( ev ) {
+    if (canScroll && mouseActivated) {
+        const amount = ev.deltaY;
+        if ( amount === 0 ) return;
+        const dir = amount / Math.abs( amount );
+        zoomspeed = dir / 10;
+        mouseActivated = false;
+        canScroll = false;
+        setTimeout(reactivateMouse,1000);
+        let toPage = currentPage + dir;
+        if(toPage > 8){
+            toPage = 1;
+        }else if(toPage < 1){
+            toPage = 8;
+        }
+        if(!introFin) toPage = 1;
+        menuItemMouseOver(toPage);
+        loadPage(toPage);
+    } 
+}
+
+function reactivateMouse() {
+        mouseActivated = true;
+        canScroll = true;
+        if(dBg) console.log("INPUT ENABLED!! ------------");
+    }
+
+function tryMenu(){
+    if(mouseActivated && canScroll){
+        menuHandlePress();
+    }
+}
+
+// Swipe Up / Down / Left / Right
+var initialX = null;
+var initialY = null;
+
+function startTouch(e) {
+    initialX = e.touches[0].clientX;
+    initialY = e.touches[0].clientY;
+};
+
+function moveTouch(e) {
+    if(canScroll && mouseActivated){
+        if (initialX === null || initialY === null) return;
+
+        var currentX = e.touches[0].clientX;
+        var currentY = e.touches[0].clientY;
+
+        var diffX = initialX - currentX;
+        var diffY = initialY - currentY;
+        var nextPage;
+
+        if (currentPage != 0){
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                // sliding horizontally
+                if (diffX > 0) {
+                    // swiped left
+                    if(dBg) console.log("swiped left");
+                } else {
+                    // swiped right
+                    if(dBg) console.log("swiped right");
+                }  
+            } else {
+                // sliding vertically
+                let toPage = currentPage;
+                if (diffY > 0) {
+                    // swiped up
+                    toPage = currentPage + 1;
+                } else {
+                    // swiped down
+                    toPage = currentPage - 1;
+                }
+                if(toPage > 8){
+                    toPage = 1;
+                }else if(toPage < 1){
+                    toPage = 8;
+                }
+                if(!introFin) toPage = 1;
+                menuItemMouseOver(toPage);
+                loadPage(toPage);
+            }
+            mouseActivated = false;
+            canScroll = false;
+            setTimeout(reactivateMouse, 1000);
+        }
+        initialX = null;
+        initialY = null;
+    }
+};
+
+function dropIntro(flyTo){
+    if(dBg) console.log("intro: " + introFin + " - menu: " + menuActivated);
+    // if(sAs){
+    //     let secnds = (Math.floor(Date.now() - startedAt) / 1000);
+    //     sa_event("intro_watched", {time_spent: secnds});
+    // }
+    introFin = true;
+    logoTL.eventCallback("onComplete", null);
+    logoTL.progress(1);
+    logoTL.kill();
+    if(dBg) console.log("drop Intro after clear");
+    // for(let i = 0; i < window.js.introObjs.length; i++){
+    //     window.js.introObjs[i].position.y = -10000;
+    //     window.js.introObjs[i].visible = false;
+    // }
+    gsap.set('#white', { autoAlpha:0, display:'none'})
+    gsap.set('#logoMain', { autoAlpha:0 })
+    gsap.set('#renderer_logzbuf', { autoAlpha:1 })
+    gsap.to(window.js.camera.position, 1, { z:flyTo + 2, ease: 'power3.out'});
+}
+
+var textIndex = 0;
+var textTL = [];
+var blurAmt = 2;
+let txtSiz = 4;
+
+// window.addEventListener("keydown", function(event) {
+//     if (event.key === "t") {
+//         if(dBg){
+//             // const bTxt = document.querySelector('.bullet-text');
+//             // bTxt.style.fontSize = '3.5mm';
+//             txtSiz += 0.5;
+//             console.log(txtSiz);
+//             //gsap.set('.bullet-text', {fontSize: txtSiz +'mm'});
+//             gsap.set('.bullet-text', {fontSize:'clamp(3.5mm, 5vmin, 7mm)'});
+//         }
+//         //'#page'+pid+'-secA .bullet-container .bullet'
+//         // let preMnuItm = document.getElementById('menuItem'+currentPage);
+//         // if(dBg) console.log('prePageTL LABEL == ' + preMnuItm.pageTL.nextLabel());
+//         //if(dBg) console.log("titleTL on: " + titleTL.isActive());
+//         // if(dBg) console.log("menuTL %: " + menuTL.progress());
+//         // if(dBg) console.log("menuItemsH.y: " + document.getElementById('menuItemsHolder').getBoundingClientRect().height);
+//         // let lastItm = document.getElementById('menuEnd');
+//         // if(dBg) console.log("menuEnd height: " + lastItm.getBoundingClientRect().height);
+//     }
+// });
+
+function openWindow(url) {
+    if(dBg) console.log('goto ' + url);
+    window.open(url, '_sm', 'location=yes,height='+window.innerHeight*.8+',width='+window.innerWidth*.8+',y='+window.innerHeight*.1+',x='+window.innerWidth*.8+',scrollbars=yes,resizeable=yes,status=yes');
+}  
+   
+</script>
+
+        <script type="module">
+
+            import * as THREE from 'three';
+
+            import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+            import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+            import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+
+            // import * as THREE from '/build/three.module.js';
+
+            // import { FontLoader } from '/jsm/loaders/FontLoader.js';
+            // import { GLTFLoader } from '/jsm/loaders/GLTFLoader.js';
+            // import { TextGeometry } from '/jsm/geometries/TextGeometry.js';
+            //import { GUI } from 'https://cdn.jsdelivr.net/npm/lil-gui@0.18/+esm';
+            //import Stats from 'three/addons/libs/stats.module.js';
+
+            let zoompos = - 100, minzoomspeed = .015;
+            let zoomspeed = minzoomspeed;
+            //let lookAtPosition = false;
+            let startPos = {
+                'x':0,//window.innerWidth * 0.015,
+                'y':0,//window.innerHeight*0.001,
+                'z':70
+            };
+            let renderer, framecontainer;
+            let container, border, stats, particls;
+            let objects = window.js.objects = {};
+            window.paused = 0;
+            let tanFOV;
+            let windowHeight;
+
+
+            let dBg2 = false;
+            const name = 'logzbuf';
+            let assetsLoaded = window.js.assetsRdy = false;
+            let auMat, agMat, ag47Mat;
+            let coinMatAg, coinMatAu;
+            let planeObj;
+            let lightDr;
+            let coinAgObj = [];
+            let coinAuObj = [];
+            let coinAg47Obj = [];
+            //let introObjs = window.js.introObjs = [];
+            let pngCubeRenderTarget, pngBackground;
+            let canSpin = false; //can you spin the spinnyboi yet?
+            let spinny = 6; //spinnyboi
+            
+            let geoA, texA, matA, objA;
+            let geoB, texB, matB, objB;
+
+            // const params = {
+            //     roughness: 0.2,
+            //     metalness: 1.0,
+            //     exposure: 1.0,
+            //     emissive: 0.3
+            // };
+
+            // const gui = new GUI();
+            // gui.add( params, 'roughness', 0, 1, 0.01 );
+            // gui.add( params, 'metalness', 0, 1, 0.01 );
+            // gui.add( params, 'exposure', 0, 2, 0.01 );
+            // gui.add( params, 'emissive', 0, 1, 0.01 );
+            // gui.hide();
+
+            // Generate a number of text labels, from 1µm in size up to 100,000,000 light years
+            // Try to use some descriptive real-world examples of objects at each scale
+
+            let nxtObj = 1;
+            const loadr = new GLTFLoader();
+            let wireMat = new THREE.LineBasicMaterial({ 
+                color: 0xb7b8bb,
+                depthTest: false,
+                opacity: 0,
+                transparent: true
+            });
+
+            // let objData = window.js.objData = [
+            //     {geo: null, mat: null, msh: null},
+            //     {geo: null, mat: null, msh: null}
+            // ];
+            let objData = window.js.objData = [[], []];
+
+            const labeldata = window.js.labeldata = [
+                { size: 1, scale: 1.0, label: 'skip' },
+                { size: 10, scale: 1.0, label: 'skip' },
+                { size: 100, scale: 1.0, label: 'skip' },
+                { size: 200, scale: 1.0, label: 'skip' },
+                { size: 300, scale: 1.0, label: 'skip' },
+                { size: 400, scale: 1.0, label: 'skip' },
+                { size: 500, scale: 1.0, label: 'p1' },
+                { size: 600, scale: 1.0, label: 'skip' }, //p2
+                { size: 700, scale: 1.0, label: 'skip' },
+                { size: 800, scale: 1.0, label: 'skip' },
+                { size: 900, scale: 1.0, label: 'skip' }, //p5
+                { size: 1000, scale: 1.0, label: 'skip' },
+                { size: 1200, scale: 1.0, label: 'skip' }, //p7
+                { size: 1300, scale: 1.0, label: 'skip' },
+                { size: 1400, scale: 1.0, label: 'skip' }, //p9
+                { size: 1500, scale: 1.0, label: 'skip' },
+                { size: 1600, scale: 1.0, label: 'skip' },
+                { size: 1700, scale: 1.0, label: 'p12' }
+            ];
+
+            init();
+            
+            const spinObj = window.js.spinObj = function(spinId){
+                spinny = spinId + 5;
+                canSpin = true;
+            }
+
+            const instantiate = window.js.instantiate = function(objId){
+                nxtObj = nxtObj == 1 ? 0 : 1; //alternate between the two arrays inside objData[]
+                objData[nxtObj] = []; //empty out the array to be used.
+                switch(objId){
+                    case 1:
+                        geoA = new THREE.SphereGeometry(0.5, 24, 12);
+                        matA = new THREE.LineBasicMaterial({ 
+                            color: 0xb7b8bb,
+                            //color: 0xffffff,
+                            depthTest: false,
+                            opacity: 0.5,
+                            transparent: true
+                        });
+                        objA = new THREE.LineSegments(geoA, matA);
+                        objA.position.z = -503;
+                        objA.name = "boll";
+                        labeldata[6].object = objA;
+                        labeldata[6].objectMaterial = objA.material;
+                        objects.logzbuf.scene.add(objA); 
+                        // geoA = new THREE.SphereGeometry(0.5, 24, 12);
+                        // //texA = new THREE.CanvasTexture(createImage());
+                        // matA = new THREE.MeshBasicMaterial({wireframe: true});
+                        // objA = new THREE.Mesh(geoA, matA);
+                        // objA.position.z = -503;
+                        // objA.name = "boll";
+                        // labeldata[6].object = objA;
+                        // labeldata[6].objectMaterial = objA.material;
+                        // objects.logzbuf.scene.add(objA);
+                        break;
+                    case 2:
+                        //tokens
+                        break;
+                    case 3:
+                        //truck
+                        const wireframeMaterialTruck = new THREE.LineBasicMaterial({ 
+                            color: 0xb7b8bb,
+                            depthTest: false,
+                            opacity: 0.5,
+                            transparent: true
+                        });
+                        loadr.load('models/truck.glb', function (gltf) {
+                            let innerModel = gltf.scene.getObjectByName('Truck');
+                            const group = window.js.truckGroup = new THREE.Group();
+                            gltf.scene.traverse((child) => {
+                                if (child.isMesh) {
+                                const childGroup = new THREE.Group();
+                                const wireframeGeometry = new THREE.WireframeGeometry(child.geometry);
+                                const wireframeTruck = new THREE.LineSegments(wireframeGeometry, wireframeMaterialTruck);
+                                childGroup.add(wireframeTruck);
+                                childGroup.position.x = child.position.x;
+                                childGroup.position.y = child.position.y;
+                                childGroup.position.z = child.position.z;
+                                childGroup.rotation.x = child.rotation.x;
+                                childGroup.rotation.y = child.rotation.y;
+                                childGroup.rotation.z = child.rotation.z;
+                                childGroup.name = child.name;
+                                group.add(childGroup);
+                                }
+                            });
+                            group.position.z = -703;
+                            group.position.y -= 0.9;
+                            group.rotation.y -= Math.PI * 0.5;
+                            group.scale.set(0.3,0.3,0.3);
+                            objects.logzbuf.scene.add(group);
+
+                            labeldata[8].object = group;
+                            labeldata[8].objectOpacity = 0.3;
+                            labeldata[8].objectMaterial = wireframeMaterialTruck;
+
+                            let bucket = objects.logzbuf.scene.getObjectByName('Bucket');
+                            let wheels = [objects.logzbuf.scene.getObjectByName('Wheel_1').rotation,objects.logzbuf.scene.getObjectByName('Wheel_1').rotation,objects.logzbuf.scene.getObjectByName('Wheel_2').rotation,objects.logzbuf.scene.getObjectByName('Wheel_3').rotation,objects.logzbuf.scene.getObjectByName('Wheel_4').rotation,objects.logzbuf.scene.getObjectByName('Wheel_5').rotation,objects.logzbuf.scene.getObjectByName('Wheel_6').rotation];
+                            if(dBg2) console.log('truck.glb building exists');
+                        })
+                        break;
+                    case 4:
+                        //entrance
+                        const wireframeMaterialEntrance = new THREE.LineBasicMaterial({ 
+                            color: 0xb7b8bb,
+                            depthTest: false,
+                            opacity: 0.5,
+                            transparent: true
+                        });
+                        loadr.load('models/entrance.glb', function (gltf) {
+                            const group = window.js.entrance = new THREE.Group();
+                            gltf.scene.traverse((child) => {
+                                if (child.isMesh) {
+                                const wireframeGeometry = new THREE.WireframeGeometry(child.geometry);
+                                const wireframeEntrance = new THREE.LineSegments(wireframeGeometry, wireframeMaterialEntrance);
+                                group.add(wireframeEntrance);
+                                }
+                            });
+                            group.position.z = -803;
+                            group.position.y = -0.2;
+                            //group.position.x = 1;
+                            objects.logzbuf.scene.add(group);
+                            labeldata[9].object = group;
+                            labeldata[9].objectOpacity = 0.25;
+                            labeldata[9].objectMaterial = wireframeMaterialEntrance;
+                            if(dBg2) console.log('entrance.glb exists');
+                        })
+                        break;
+                    case 5:
+                        //excavatr
+                        const wireframeMaterialExcavator = new THREE.LineBasicMaterial({ 
+                            color: 0xb7b8bb,
+                            depthTest: false,
+                            opacity: 0.5,
+                            transparent: true
+                        });
+                        loadr.load('models/excavator.glb', function (gltf) {
+                            const group = window.js.excavator = new THREE.Group();
+                            gltf.scene.traverse((child) => {
+                                if (child.isMesh) {
+                                const childGroup = new THREE.Group();
+                                const wireframeGeometry = new THREE.WireframeGeometry(child.geometry);
+                                const wireframeExcavator = new THREE.LineSegments(wireframeGeometry, wireframeMaterialExcavator);
+                                childGroup.add(wireframeExcavator);
+                                childGroup.position.x = child.position.x;
+                                childGroup.position.y = child.position.y;
+                                childGroup.position.z = child.position.z;
+                                childGroup.rotation.x = child.rotation.x;
+                                childGroup.rotation.y = child.rotation.y;
+                                childGroup.rotation.z = child.rotation.z;
+                                childGroup.name = child.name;
+                                group.add(childGroup);
+                                }
+                            });
+                            group.position.z = -900;
+                            group.position.y -= 0.5;
+                            group.scale.set(0.0135,0.0135,0.0135);
+                            objects.logzbuf.scene.add(group);
+                            labeldata[10].object = group;
+                            labeldata[10].objectOpacity = 0.083;
+                            labeldata[10].objectMaterial = wireframeMaterialExcavator;
+                            if(dBg2) console.log('excavator.glb building exists')
+                        })
+                        // loadr.load('models/excavator.glb', function (gltf) {
+                        //     objB = window.js.excavator = new THREE.Group();
+                        //     let indx = 0;
+                        //     gltf.scene.traverse((child) => {
+                        //         if (child.isMesh) {
+                        //             const childGroup = new THREE.Group();
+                        //             let geom = new THREE.WireframeGeometry(child.geometry);
+                        //             let matr = new THREE.LineBasicMaterial({ 
+                        //                 color: 0xb7b8bb,
+                        //                 //color: 0xffffff,
+                        //                 depthTest: false,
+                        //                 opacity: 1,
+                        //                 transparent: true
+                        //             });
+                        //             let objc = new THREE.LineSegments(geom, matr);
+                        //             childGroup.add(objc);
+                        //             childGroup.position.x = child.position.x;
+                        //             childGroup.position.y = child.position.y;
+                        //             childGroup.position.z = child.position.z;
+                        //             childGroup.rotation.x = child.rotation.x;
+                        //             childGroup.rotation.y = child.rotation.y;
+                        //             childGroup.rotation.z = child.rotation.z;
+                        //             childGroup.name = child.name;
+                        //             objB.add(childGroup);
+                        //             let contnr = {
+                        //                 geo: geom,
+                        //                 mat: matr,
+                        //                 obj: objc
+                        //             };
+                        //             objData[nxtObj].push(contnr);
+                        //             indx++;
+                        //         }
+                        //     });
+                        //     objB.position.z = -501;
+                        //     objB.position.y -= 0.5;
+                        //     objB.scale.set(0.0135, 0.0135, 0.0135);
+                        //     objects.logzbuf.scene.add(objB);
+                        //     labeldata[10].object = objB;
+                        //     labeldata[10].objectOpacity = 1;
+                        //     if(dBg2) console.log(objData);
+                        //     if(dBg2) console.log(objData[nxtObj].toString());
+                        //     //setTimeout(disposeObj, 2000, 2);
+                        //     //labeldata[10].objectMaterial = wireframeMaterialExcavator;
+                        // })
+                        break;
+                    case 6:
+                        //tunnels
+                        const wireframeMaterialTunnels = new THREE.LineBasicMaterial({ 
+                            color: 0xb7b8bb,
+                            depthTest: false,
+                            opacity: 0.5,
+                            transparent: true
+                        });
+                        loadr.load('models/tunnels.glb', function (gltf) {
+                            const group = window.js.tunnels = new THREE.Group();
+                            gltf.scene.traverse((child) => {
+                                if (child.isMesh) {
+                                const wireframeGeometry = new THREE.WireframeGeometry(child.geometry);
+                                const wireframeTunnels = new THREE.LineSegments(wireframeGeometry, wireframeMaterialTunnels);
+                                group.add(wireframeTunnels);
+                                }
+                            });
+                            group.position.z = -1005;
+                            objects.logzbuf.scene.add(group);
+                            labeldata[11].object = group;
+                            labeldata[11].objectOpacity = 0.25;
+                            labeldata[11].objectMaterial = wireframeMaterialTunnels;
+                            if(dBg2) console.log('tunnels.glb exists');
+                        })
+                        break;
+                    case 7:
+                        //team
+                        const wireframeMaterialPeople = new THREE.LineBasicMaterial({ 
+                            color: 0xb7b8bb,
+                            depthTest: false,
+                            opacity: 0.5,
+                            transparent: true
+                        });
+                        let tmGroup = window.js.people = new THREE.Group();
+                        loadr.load('models/tm_ppl.glb', function (gltf) {
+                            gltf.scene.traverse((child) => {
+                                if (child.isMesh) {
+                                    const wireframeGeometry = new THREE.WireframeGeometry(child.geometry);
+                                    const wireframePeople = new THREE.LineSegments(wireframeGeometry, wireframeMaterialPeople);
+                                    tmGroup.add(wireframePeople);
+                                    if(dBg2) console.log("tm name");
+                                }
+                            });
+                        })
+                        loadr.load('models/tm_txt.glb', function (gltf) {
+                            gltf.scene.traverse((child) => {
+                                if (child.name == "tm_txt") {
+                                    tmGroup.add(child);
+                                    if(dBg2) console.log("tx name");
+                                }
+                            });
+                        })
+                        tmGroup.position.y -= 1.2;
+                        tmGroup.position.z = -1203;
+                        objects.logzbuf.scene.add(tmGroup);
+                        labeldata[12].object = tmGroup;
+                        labeldata[12].objectOpacity = 0.25;
+                        labeldata[12].objectMaterial = wireframeMaterialPeople;
+                        if(dBg2) console.log('people.glb exists')
+                        break;
+                    case 8:
+                        //logo
+                        const wireframeMaterialLogo = new THREE.LineBasicMaterial({ 
+                            color: 0xb7b8bb,
+                            depthTest: false,
+                            opacity: 0.5,
+                            transparent: true
+                        });
+                        loadr.load('models/logo.glb', function (gltf) {
+                            const group = window.js.xLogo = new THREE.Group();
+                            gltf.scene.traverse((child) => {
+                                if (child.isMesh) {
+                                const wireframeGeometry = new THREE.WireframeGeometry(child.geometry);
+                                const wireframeLogo = new THREE.LineSegments(wireframeGeometry, wireframeMaterialLogo);
+                                group.add(wireframeLogo);
+                                }
+                            });
+                            group.position.z = -1304;
+                            objects.logzbuf.scene.add(group);
+                            labeldata[13].object = group;
+                            labeldata[13].objectOpacity = 0.25;
+                            labeldata[13].objectMaterial = wireframeMaterialLogo;
+                            if(dBg2) console.log('logo.glb building exists')
+                        
+                        })
+                        break;
+                }
+            }
+
+            const disposeObj = window.js.disposeObj = function(objId){
+                switch(objId){
+                    case 1:
+                        objects.logzbuf.scene.remove(objA);
+                        geoA.dispose();
+                        matA.dispose();
+                        //if(dBg2) console.log(objects.logzbuf.scene.getObjectByName("boll").position.z);
+                        //if(dBg2) console.log(labeldata[6].object.position.z);
+                        //labeldata[6].object.LineSegments.dispose();
+                        //labeldata[6].object.Material.dispose();
+                        // scene.traverse((coinModl) => {
+                        //     for (let i = 0; i < coinModl.children.length; i++) {
+                        //         if(coinModl.children[i].name == "AgFront"){
+                        //             coinModl.children[i].material = coinMatAg;
+                        //         }else if(coinModl.children[i].name == "AgEdge"){
+                        //             coinModl.children[i].material = coinMatAg;
+                        //         }else if(coinModl.children[i].name == "AgBack"){
+                        //             coinModl.children[i].material = agMat;
+                        //         }
+                        //         introObjs.push(coinModl.children[i]);
+                        //     }
+                        // });
+                        break;
+                    case 2:
+                        objects.logzbuf.scene.remove(objB);
+                        // for(let i = 0; i < objData[nxtObj].length; i++){
+                        //     if(dBg2) console.log("dispose2");
+                        //     objects.logzbuf.scene.remove(objData[nxtObj][i].obj);
+                        //     objData[nxtObj][i].geo.dispose();
+                        //     objData[nxtObj][i].mat.dispose();
+                        // }
+                        break;
+                }
+            }
+
+            // window.addEventListener("keydown", function(event) {
+            //     if (event.key === "t") {
+            //         //instantiate(2);
+            //         //if(dBg2) console.log("cam-z: " + objects.logzbuf.camera.position.z);
+            //         // if(dBg2) console.log("width: " + window.innerWidth);
+            //         // if(dBg2) console.log("height: " + window.innerHeight);
+            //         // if(gui._hidden){
+            //         //     gui.show();
+            //         // }else{
+            //         //     gui.hide();
+            //         // }
+            //     }
+            // });
+
+            function init() {
+                const scene = window.js.scene = new THREE.Scene();
+                container = document.getElementById( 'threejs_container' );
+                const camera = window.js.camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 90 );
+                camera.position.x = startPos.x;
+                camera.position.y = startPos.y;
+                camera.position.z = startPos.z;
+                camera.updateProjectionMatrix();
+                scene.add( camera );
+
+                renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+                renderer.setPixelRatio( window.devicePixelRatio );
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                renderer.shadowMap.enabled = true;
+                renderer.outputColorSpace = THREE.SRGBColorSpace;
+                //renderer.setClearColor(0x6FA8DC, 1); 
+                renderer.domElement.style.position = 'fixed';
+                renderer.domElement.id = 'renderer_' + name;
+                renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+                framecontainer = document.getElementById( 'container_' + name );
+                framecontainer.appendChild( renderer.domElement );
+
+                tanFOV = window.js.tangFv = Math.tan(((Math.PI / 180) * camera.fov/2));
+                windowHeight = window.js.windwHght = window.innerHeight;
+
+                const loader = new FontLoader();
+                loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {} );
+
+                objects.logzbuf = {
+                    container: framecontainer,
+                    renderer: renderer,
+                    scene: scene,
+                    camera: camera
+                };
+
+                initScene(); 
+                //animate();
+                window.init();
+
+                //stats = new Stats();
+                //container.appendChild( stats.dom );
+                
+                window.zoomPos = 0;
+                window.camZ = 0;
+            }
+
+            // Function to tint the group white
+            function tintGroupWhite(group) {
+              group.traverse((object) => {
+                if (object instanceof THREE.Mesh) {
+                  // Change the material color to white
+                  object.material.color.set(0xffffff);
+                }
+              });
+            }
+
+            function initScene() {
+
+                window.js.lights = [];
+                
+                const kGeo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+                const kMat = new THREE.MeshBasicMaterial();
+                const kube = new THREE.Mesh(kGeo, kMat);
+                kube.position.z = -604;
+                objects.logzbuf.scene.add(kube);
+                kube.visible = false;
+                lightDr = window.js.lightDr = new THREE.DirectionalLight( 0xffffff, 1 );
+                lightDr.position.set( 0, 1, 20 );
+                lightDr.target = kube;
+                objects.logzbuf.scene.add(lightDr);
+
+                THREE.DefaultLoadingManager.onLoad = function(){
+                    for (let i = 0; i < coinAgObj.length; i++) {
+                        coinAgObj[i].material.roughness = 0.25;
+                        coinAg47Obj[i].material.roughness = 0.25;
+                        //coinAuObj[i].material.roughness = 0.25;
+                        coinAgObj[i].material.metalness = 1.10;
+                        coinAg47Obj[i].material.metalness = 1.10;
+                        //coinAuObj[i].material.metalness = 1.10;
+                    }
+
+                    let newEnvMap = coinAgObj[0].material.envMap;
+                    newEnvMap = pngCubeRenderTarget ? pngCubeRenderTarget.texture : null;
+
+                    for (let i = 0; i < coinAgObj.length; i++) {
+                        coinAgObj[i].material.envMap = newEnvMap;
+                        coinAg47Obj[i].material.envMap = newEnvMap;
+                        //coinAuObj[i].material.envMap = newEnvMap;
+                        coinAgObj[i].material.envMapIntensity = 1.0;
+                        coinAg47Obj[i].material.envMapIntensity = 1.0;
+                        //coinAuObj[i].material.envMapIntensity = 1.0;
+                        coinAgObj[i].material.needsUpdate = true;
+                        coinAg47Obj[i].material.needsUpdate = true;
+                        //coinAuObj[i].material.needsUpdate = true;
+                    }
+
+                    planeObj.material.map = newEnvMap;
+                    planeObj.material.needsUpdate = true;
+                    planeObj.visible = false;
+
+                    renderer.toneMappingExposure = 1.1;
+                    assetsLoaded = true;
+                    pmremGenerator.dispose();
+                };
+                
+                new THREE.TextureLoader().load('models/coin/env_texture.png', function (texture){
+                    texture.mapping = THREE.EquirectangularReflectionMapping;
+                    texture.colorSpace = THREE.SRGBColorSpace;
+                    pngCubeRenderTarget = pmremGenerator.fromEquirectangular(texture);
+                    pngBackground = texture;
+                });
+
+                const pmremGenerator = new THREE.PMREMGenerator(objects.logzbuf.renderer);
+                pmremGenerator.compileEquirectangularShader();
+
+                let planeGeo = new THREE.PlaneGeometry( 200, 200 );
+                let planeMat = new THREE.MeshBasicMaterial();
+                planeMat.map = pngBackground;
+
+                const planeMesh = new THREE.Mesh( planeGeo, planeMat );
+                planeMesh.position.set(0, -200, -603);
+                planeMesh.rotation.x = (Math.PI * -0.5);
+                planeObj = planeMesh;
+                objects.logzbuf.scene.add( planeMesh );
+
+                const txtrLoadr = new THREE.TextureLoader();
+
+                //Texture loading. 'coin' texture is the owl/front side & the same for both coins.
+                const coinNorm = txtrLoadr.load ('models/coin/coin_norm.png');
+                const coinAo = txtrLoadr.load ('models/coin/coin_ao.png');
+                const agNorm = txtrLoadr.load ('models/coin/ag_norm.png');
+                const agAo = txtrLoadr.load ('models/coin/ag_ao.png');
+                const ag47Norm = txtrLoadr.load ('models/coin/47_norm.png');
+                const ag47Ao = txtrLoadr.load ('models/coin/47_ao.png');
+                const auNorm = txtrLoadr.load ('models/coin/au_norm.png');
+                const auAo = txtrLoadr.load ('models/coin/au_ao.png');
+
+                //Coin/Front materials ----------------------------------
+                coinNorm.flipY = true;
+                coinNorm.flipX = false;
+                coinAo.flipY = true;
+                coinAo.flipX = false;
+                coinMatAg = new THREE.MeshStandardMaterial();
+                coinMatAu = new THREE.MeshStandardMaterial();
+                coinMatAg.emissive = coinMatAu.emissive = new THREE.Color(0x000000);
+                coinMatAg.emissiveIntensity = coinMatAu.emissiveIntensity = 0.3;
+                coinMatAg.aoMap = coinMatAu.aoMap = coinAo;
+                coinMatAg.normalMap = coinMatAu.normalMap = coinNorm;
+				//coinMatAg.side = coinMatAu.side = THREE.DoubleSide;
+                coinMatAg.color = new THREE.Color(0xD3D3D9); //silver colour
+                coinMatAu.color = new THREE.Color(0xEAC335); //gold colour
+
+                //Ag material ----------------------------------
+                agNorm.flipY = true;
+                agNorm.flipX = false;
+                agAo.flipY = true;
+                agAo.flipX = false;
+                agMat = new THREE.MeshStandardMaterial();
+                agMat.color = new THREE.Color(0xD3D3D9);
+                agMat.emissive = new THREE.Color(0x000000);
+                agMat.emissiveIntensity = 0.3;
+                agMat.aoMap = agAo;
+                agMat.normalMap = agNorm;
+				//agMat.side = THREE.DoubleSide;
+
+                //Ag47 material ----------------------------------
+                ag47Norm.flipY = true;
+                ag47Norm.flipX = false;
+                ag47Ao.flipY = true;
+                ag47Ao.flipX = false;
+                ag47Mat = new THREE.MeshStandardMaterial();
+                ag47Mat.color = new THREE.Color(0xD3D3D9);
+                ag47Mat.emissive = new THREE.Color(0x000000);
+                ag47Mat.emissiveIntensity = 0.3;
+                ag47Mat.aoMap = ag47Ao;
+                ag47Mat.normalMap = ag47Norm;
+				//ag47Mat.side = THREE.DoubleSide;
+
+                //Au material ----------------------------------
+                auNorm.flipY = true;
+                auNorm.flipX = false;
+                auAo.flipY = true;
+                auAo.flipX = false;
+                auMat = new THREE.MeshStandardMaterial();
+                auMat.color = new THREE.Color(0xEAC335);
+                auMat.emissive = new THREE.Color(0x000000);
+                auMat.emissiveIntensity = 0.3;
+                auMat.aoMap = auAo;
+                auMat.normalMap = auNorm;
+				//auMat.side = THREE.DoubleSide;                
+
+
+                const loader2 = new GLTFLoader();
+                
+                loader2.load('models/coin/coin_ag.glb', function ( gltf ) {
+                  let agModl = gltf.scene.getObjectByName('coin_ag');
+                  var model = window.js.AgCoins = gltf.scene;
+                  gltf.scene.traverse((agModl) => {
+                    for (let i = 0; i < agModl.children.length; i++) {
+                      if(agModl.children[i].name == "AgFront"){
+                        agModl.children[i].material = coinMatAg;
+                      }else if(agModl.children[i].name == "AgEdge"){
+                        agModl.children[i].material = coinMatAg;
+                      }else if(agModl.children[i].name == "AgBack"){
+                        agModl.children[i].material = agMat;
+                      }
+                      coinAgObj.push(agModl.children[i]);
+                    }
+                  });
+                  model.position.x = 1.1;
+                  model.position.z = -603;
+                  model.rotation.x = 18.84;
+                  model.rotation.y = 70;   // spin start one coin opposite side
+                  objects.logzbuf.scene.add(model);
+                  model.visible = false;
+                })
+                // replace with ag47
+                loader2.load('models/coin/coin_ag.glb', function ( gltf ) {
+                  let auModl = gltf.scene.getObjectByName('coin_ag');
+                  var model = window.js.AuCoins = gltf.scene;
+                  gltf.scene.traverse((auModl) => {
+                    for (let i = 0; i < auModl.children.length; i++) {
+                      if(auModl.children[i].name == "AgFront"){
+                        auModl.children[i].material = coinMatAg;
+                      }else if(auModl.children[i].name == "AgEdge"){
+                        auModl.children[i].material = coinMatAg;
+                      }else if(auModl.children[i].name == "AgBack"){
+                        auModl.children[i].material = ag47Mat;
+                      }
+                      coinAg47Obj.push(auModl.children[i]);
+                    }
+                  });
+                  model.position.x = -1.1;
+                  model.position.z = -603;
+                  model.rotation.x = 18.84;
+                  model.rotation.y = 0;
+                  objects.logzbuf.scene.add(model);
+                  model.visible = false;
+                  window.js.tokenz = false;
+                })
+            }
+
+            function animate() {
+                requestAnimationFrame( animate );
+                if(window.js.tokenz){
+                    window.js.AgCoins.rotation.y += 0.01;
+                    window.js.AuCoins.rotation.y += 0.01;
+                }
+                if(canSpin){
+                    if(currentPage == 7){ 
+                        labeldata[spinny].object.rotation.y += 0.003; 
+                    }else{ 
+                        labeldata[spinny].object.rotation.y += 0.006; 
+                    } 
+                }
+                render();
+                // if (Number(window.paused) == Number(0)) {
+                // }
+            }
+
+            function render() {
+                // if(assetsLoaded){
+                //     for (let i = 0; i < coinAgObj.length; i++) {
+                //         coinAgObj[i].material.roughness = params.roughness;
+                //         coinAg47Obj[i].material.roughness = params.roughness;
+                //         //coinAuObj[i].material.roughness = params.roughness;
+                //         coinAgObj[i].material.metalness = params.metalness;
+                //         coinAg47Obj[i].material.metalness = params.metalness;
+                //         //coinAuObj[i].material.metalness = params.metalness;
+                //         coinAgObj[i].material.emissiveIntensity = params.emissive;
+                //         coinAg47Obj[i].material.emissiveIntensity = params.emissive;
+                //         //coinAuObj[i].material.emissiveIntensity = params.emissive;
+                //     }
+
+                //     renderer.toneMappingExposure = params.exposure;
+                //     if(dBg2) console.log("cam-z: " + objects.logzbuf.camera.position.z + "  coin-z: " + window.js.coinAg.position.z);
+                // }
+                //objects.normal.renderer.render( objects.normal.scene, objects.normal.camera );
+                objects.logzbuf.renderer.render( objects.logzbuf.scene, objects.logzbuf.camera );
+                //stats.update();
+            }
+
+            window.addEventListener( 'resize', onWindowResize, false );
+            function onWindowResize( event ) {
+                if(dBg2) console.log("resizing");
+                objects.logzbuf.camera.aspect = window.innerWidth / window.innerHeight;
+                objects.logzbuf.camera.fov = (360 / Math.PI) * Math.atan(tanFOV * (window.innerHeight / windowHeight));  // adjust the FOV
+                objects.logzbuf.camera.updateProjectionMatrix();
+                //camera.lookAt( scene.position );
+                objects.logzbuf.renderer.setSize(window.innerWidth, window.innerHeight);
+                objects.logzbuf.renderer.render(objects.logzbuf.scene, objects.logzbuf.camera);
+            }
+
+            animate();
+
+        </script>
+
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+<style>
+    #mainTradView {
+      display: flex;
+    }
+    #tvChartContainer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      margin-top: -8px;
+      margin-left: -8px;
+      background-color: black;
+      filter: contrast(1.25);
+    }
+    .price-line {
+      position: absolute;
+    }
+</style>
+</head>
+<body onload="initTr()" id='mainTvId'>
+  <div id="mainTradView">
+    <div class="tradChart">
+      <div class="tradContainer" style="position: static; height:100%; width:100%; overflow: hidden;">
+        <div id="tvChartContainer" class="price-line"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+
+  function initTr(){
+      // trading view test
+      tvWidget = new TradingView.widget({
+          container_id: "tvChartContainer", // Specify the container element
+          symbol: "PYTH:XAGUSD", // Set the symbol for silver (XAGUSD is the TradingView symbol for silver)
+          compare_symbols: [
+              { symbol: 'PYTH:LTCUSD', title: '' }, //comparison: ['PYTH:LTCUSD','PYTH:ATOMUSD'],
+              { symbol: 'PYTH:ATOMUSD', title: '' },
+          ],
+          interval: "D", // Choose the desired interval (e.g., 'D' for daily)
+          timezone: "Etc/UTC", // Set the timezone (optional)
+          theme: "dark", // Choose the theme (optional)
+          hide_top_toolbar: false, // Show the TradingView toolbar (optional)
+          show_logo: true, // Display the TradingView logo (optional)
+          hide_legend: false, // Show the legend (optional)
+          hide_side_toolbar: true, // Show the interval selector (optional)
+          allow_symbol_change: true, // Show the 'powered by TradingView' link (optional)
+          autosize: true,
+
+          overrides: {
+              "paneProperties.background": "#C0C0C0",
+              "paneProperties.vertGridProperties.color": "#363c4e",
+              "paneProperties.horzGridProperties.color": "#363c4e",
+              "symbolWatermarkProperties.transparency": 90,
+              "scalesProperties.textColor" : "#AAA",
+              "mainSeriesProperties.candleStyle.wickUpColor": '#336854',
+              "mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
+          },
+          "style": "3",
+          "locale": "en",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "backgroundColor": "rgba(0, 0, 0, 1)",
+          "allow_symbol_change": true,
+          "save_image": false,
+      });
+  }
+  </script>
+</body>
+</html>

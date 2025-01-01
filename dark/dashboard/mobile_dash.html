@@ -1,0 +1,990 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Example</title>
+<!-- <script type="text/javascript" src="charting_library-master/charting_library/charting_library.js"></script> -->
+<script type="text/javascript" src="src/datafeed.js"></script>
+<script type="text/javascript" src="charting_library/charting_library.standalone.js"></script>
+<script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<!-- <script type="text/javascript" src="qrc:///Dex/Squeexe/Web/qwebchannel.js"></script> -->
+<!-- <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script> -->
+<script type="text/javascript">
+    //import datafeed from '/src/datafeed.js'
+    //var backend; //defined below as a reference to our qml object.
+    //var result;
+    //var savedWidgetContent = null;
+		//var savedTemplate = null;
+
+    function getParameterByName(name) {
+				name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+				var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+					results = regex.exec(location.search);
+				return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+
+    //window.onload = function(){ //gets called first..
+    function setupBridge(){
+        console.log("html - window.onload() start - " + Date.now());
+        // new QWebChannel(qt.webChannelTransport, function(channel) {
+        //     console.log("html - window.onload() before obj assign - " + Date.now());
+        //     backend = channel.objects.backend;
+        //     console.log("html - window.onload() after obj assign - " + Date.now());
+        //     backend.setAgPrice.connect(function(curAgPrice) {
+        //         alert(curAgPrice);
+        //         document.getElementById("htSignal").innerHTML = curAgPrice;
+        //     });
+        // });
+				// var datafeedUrl = "https://demo-feed-data.tradingview.com";
+				// var customDataUrl = getParameterByName('dataUrl');
+				// if (customDataUrl !== "") {
+				// 	datafeedUrl = customDataUrl.startsWith('https://') ? customDataUrl : `https://${customDataUrl}`;
+				// }
+				// var udf_datafeed = new Datafeeds.UDFCompatibleDatafeed(datafeedUrl, undefined, {
+				// 	maxResponseLength: 1000,
+				// 	expectedOrder: 'latestFirst',
+				// });
+
+				var widget = window.tvWidget = new TradingView.widget({
+					//debug: true, // uncomment this line to see Library errors and warnings in the console
+					fullscreen: false,
+					//symbol: 'BTCUSD',
+          symbol: "XAGUSD", // Set the symbol for silver (XAGUSD is the TradingView symbol for silver)
+          // compare_symbols: [
+          //     { symbol: 'LTCUSD', title: '' }, //comparison: ['PYTH:LTCUSD','PYTH:ATOMUSD'],
+          //     { symbol: 'ATOMUSD', title: '' },
+          // ],
+					interval: '1',
+					//toolbar_bg: '#ff5900',
+					container: "tv_chart_container",
+
+					//	BEWARE: no trailing slash is expected in feed URL
+					datafeed: datafeed,
+          //library_path: "https://weblet-dex.github.io/dashboard/charting_library/",
+					library_path: "charting_library/",
+          custom_css_url: '../tvtheme.css',
+					locale: "en",
+
+					disabled_features: ["save_chart_properties_to_local_storage", "volume_force_overlay"],
+					enabled_features: ["move_logo_to_main_pane"],
+					overrides: {
+						"mainSeriesProperties.style": 1,
+            "paneProperties.background": "#000000",
+						"volumePaneSize": "tiny"
+					},
+					// studies_overrides: {
+					// 	"volume.volume.color.0": "#00FFFF",
+					// 	"volume.volume.color.1": "#0000FF",
+					// 	"volume.volume.transparency": 70,
+					// 	"volume.volume ma.color": "#FF0000",
+					// 	"volume.volume ma.transparency": 30,
+					// 	"volume.volume ma.linewidth": 5,
+					// 	//"volume.volume ma.visible": true,
+					// 	"bollinger bands.median.color": "#33FF88",
+					// 	"bollinger bands.upper.linewidth": 7
+					// },
+					debug: true,
+					// time_frames: [
+					// 	{ text: "50y", resolution: "6M" },
+					// 	{ text: "3y", resolution: "W" },
+					// 	{ text: "8m", resolution: "D" },
+					// 	{ text: "2m", resolution: "D" },
+					// 	{ text: "1m", resolution: "60" },
+					// 	{ text: "1w", resolution: "30" },
+					// 	{ text: "7d", resolution: "30" },
+					// 	{ text: "5d", resolution: "10" },
+					// 	{ text: "3d", resolution: "10" },
+					// 	{ text: "2d", resolution: "5" },
+					// 	{ text: "1d", resolution: "5" }
+					// ],
+					charts_storage_url: 'https://saveload.tradingview.com',
+					charts_storage_api_version: "1.1",
+					client_id: 'tradingview.com',
+					user_id: 'public_user',
+          timezone: "Etc/UTC",
+          autosize: true,
+					// favorites: {
+					// 	intervals: ["1D", "3D", "3W", "W", "M"],
+					// 	chartTypes: ["Area", "Line"]
+					// }
+				});
+
+				// var savedWidgetContent = null;
+				// var savedTemplate = null;
+
+				// widget.onChartReady(function() {
+				// 	var position = widget.chart().createPositionLine()
+				// 		.onReverse(function(text) {
+				// 			console.log("Position reverse event");
+				// 		})
+				// 		.onClose(function(text) {
+				// 			console.log("Position close event");
+				// 		})
+				// 		.setText("PROFIT: 71.1 (3.31%)")
+				// 		.setQuantity("20")
+				// 		.setLineLength(3);
+				// 	position.setPrice(47);
+
+				// 	// var order = widget.chart().createOrderLine()
+				// 	// 	.onMove(function() {
+				// 	// 		console.log("Order moved event");
+				// 	// 	})
+				// 	// 	.onCancel(function(text) {
+				// 	// 		console.log("Order cancel event");
+				// 	// 	})
+				// 	// 	.setText("STOP: 73.5 (5,64%)")
+				// 	// 	.setLineLength(3)
+				// 	// 	.setQuantity("2");
+				// 	// order.setPrice(order.getPrice() - 2.5);
+				// }); // end of widget.onChartReady
+        init();
+    }
+    
+    // function checkAgPrice(){				
+    //     backend.getAgPrice(function(callback) { //should be async
+    //         result = callback;
+    //         alert(result);
+    //         document.getElementById("htReturn").innerHTML = result;
+    //     });
+    // }
+
+    // function onBatch(numbr){
+    //     backend.batchNumbr = JSON.stringify((numbr + 2));
+    //     backend.focusBatch(JSON.stringify(numbr));
+    // }
+
+    function tknFiat(){
+        //backend.reqFiat();
+        alert("Buy!");
+    }
+
+	  function doThing(){
+    	alert('Hello World!');
+  	}
+
+    // function getMinAndMaxPrice(udf_datafeed, time1, time2, callback) {
+		// 		var minPrice = 99999, maxPrice = 0;
+		// 		var minPriceTime, maxPriceTime;
+		// 		udf_datafeed.resolveSymbol("AAPL", function(symbolInfo) {
+		// 			var periodParams = { from: time1, to: time2 };
+		// 			udf_datafeed.getBars(symbolInfo, "D", periodParams, function(bars) {
+		// 				bars.forEach(function(bar) {
+		// 					if (bar.time / 1000 >= time1 && bar.time / 1000 <= time2) {
+		// 						if (bar.high > maxPrice) {
+		// 							maxPrice = bar.high;
+		// 							maxPriceTime = bar.time / 1000;
+		// 						}
+		// 						if (bar.low < minPrice) {
+		// 							minPrice = bar.low;
+		// 							minPriceTime = bar.time / 1000;
+		// 						}
+		// 					}
+		// 				});
+		// 				callback(minPrice, maxPrice, minPriceTime, maxPriceTime);
+		// 			}, function(err) {
+		// 				throw new Error(err.message);
+		// 			});
+		// 	  }, function(err) {
+		// 			throw new Error(err.message);
+		// 		});
+		// }
+
+    window.addEventListener('DOMContentLoaded', setupBridge, false);
+
+</script>
+<style>
+
+    @font-face {
+        font-family: 'dinregular';
+        src: url('din-webfont.woff2') format('woff2'),
+             url('din-webfont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+
+    }
+
+    @font-face {
+        font-family: 'ds-digitalnormal';
+        src: url('ds-digi-webfont.woff2') format('woff2'),
+             url('ds-digi-webfont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+
+    }
+
+    @font-face {
+        font-family: 'nebularegular';
+        src: url('nebula-regular-webfont.woff2') format('woff2'),
+             url('nebula-regular-webfont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+    .smallNumber {
+      font-family: 'ds-digitalnormal';
+      font-size: 1vh;
+      color: white;
+      white-space: nowrap;
+    }
+    .mediumNumber {
+      font-family: 'ds-digitalnormal';
+      font-size: 2vh;
+      color: white;
+      white-space: nowrap;
+    }
+    .bigNumber {
+      font-family: 'ds-digitalnormal';
+      font-size: 3.6vh;
+      color: white;
+      white-space: nowrap;
+    }
+    .xbigNumber {
+      font-family: 'ds-digitalnormal';
+      font-size: 4.5vh;
+      color: white;
+      white-space: nowrap;
+    }
+    .titleFont {
+      font-family: 'dinregular';
+      font-size: 3vh;
+      color: white;
+      white-space: nowrap;
+    }
+    .subTitleFont {
+      font-family: 'nebularegular';
+      font-size: 3.3vh;
+      max-height: 3.3vh;
+      color: white;
+      white-space: nowrap;
+    }
+
+    body {
+      display: flex;
+      flex-flow: column nowrap;
+      scroll-behavior: smooth;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      /* background: content-box radial-gradient(#0e111a 35% 25%, #000000 90% 50%); */
+      background: #000000;
+      /* color: white; */
+      font-family: 'dinregular';
+      font-size: 1vw;
+      /* min-width: 1240px;
+      min-height: 630px; */
+    }
+    #dashboard {
+      display: flex;
+      flex-flow: column nowrap;
+      scroll-behavior: smooth;
+      align-items: center;
+      width: 90%;
+      height: 65vh;
+      margin-top: 5vh;
+      padding: 1vh;
+    }
+    #releases {
+      width: 100%;/*
+      height: 100%;*/
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ff6700;
+      box-shadow: 0px 0px 8px 0px #ff6700;
+    }
+    #mainPriceChart {
+      width: 48.5%;
+      /*height: 100%;
+      width: 800px;
+      height: 550px;*/
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ff6700;
+      margin-left: 0.5vw;
+      box-shadow: 0px 0px 8px 0px #ff6700;
+    }
+    #tv_chart_container {
+      position: absolute;
+      z-index: 3;/**/
+      width: 100%;
+      height: 100%;
+    }
+    .price-line {
+      position: absolute;
+    }
+    .release-item,
+    .price-item,
+    .batch-item {
+     /* width: 33.33%;
+      height: 100%;*/
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ff6700;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 80%;
+      margin: 0 auto;
+    }
+    .reserve-title {
+      font-size: 3.6vh;
+      margin-bottom: 8vh;
+      margin-top: -6.3vh;
+    }
+    #release-total {
+      position: absolute;
+      z-index: 2;
+      margin-top: -6vh;
+      /* margin-left: -5vh; */
+      width: 31%;
+      text-align: center;
+    }
+    .release-pie-container{
+      position: relative;
+      height: 26vh;
+      width: 42.5vw;
+      margin: auto;
+      /* margin-left: -2vh;
+      margin-top: 8vh;
+      margin-bottom: 4vh; */
+      /* margin-right: 10vh; */
+    }
+    .release-info {
+      top:4vh;
+      position: relative;
+    }
+    .release-info-title {
+      margin-top: -4.5vh;
+    }
+    .release-content, .batch-content {
+      /*color: #ffce56;*/
+      margin-bottom: 10px;
+    }
+    .release-bar-container {
+      position: relative;
+      display: flex;
+      align-content: flex-end;
+      height: 20vh;
+      /*width: 9vh;*/
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .release-bar {
+      position: absolute;
+    }
+    .release-item {
+      display: flex;
+      /*background: rgba(255, 99, 132, 0.2);*/      
+      border: 2px solid rgba(231, 127, 60, 1);
+      margin-left: 0.5vw;
+      box-shadow: 0px 0px 4px 0px rgba(255, 99, 132, 1);
+    }
+    .release-item-left {
+      width: 80%;
+      text-align: left;
+    }
+    .release-item-right {
+      width: 20%;
+      text-align: right;
+    }
+
+    #dashboardBottom {
+      margin-top: 3vh;
+      width: 98%;
+      height: 22vh;/**/
+      position: relative;
+      padding-top: 1vw;
+      padding-left: 1vw;
+      padding-right: 1vw;
+    }
+    #batches {  
+      width: 100%;    
+      height: 100%;
+      display: flex;/*
+      padding: 10px;*/
+      border-radius: 10px;
+      border: 1px solid #fd4a00;
+      box-shadow: 0px 0px 8px 0px #ff6700;
+    }
+    .batch-pie-container {
+      height: 100%;
+    }
+    .batch-item {
+      width:30%;
+      display: flex;
+      margin: 1vh;
+      margin-right: 0;
+    }    
+    .batch-content {
+      /*color: #36a2eb;*/
+      margin: 0.35vh;
+    }
+    .batch-title {
+      text-align: center;
+      font-size: 2.7vh;
+      margin-top: -0.5vh;
+    }
+    .batch-content-left {
+      width: 40%;
+    }
+    .batch-content-right {
+      width: 60%;
+      text-align: right;
+    }
+    .batch-item-label {
+      text-align: left;
+      width: 47%;
+      font-size: 1.8vh;
+      font-weight: bold;
+      display: inline-table;
+    }
+    .batch-item-label-right {
+      width: 50%;
+      display: inline-table;
+      font-size: 2.5vh;
+    }
+    .buyButton {
+      width: -webkit-fill-available;
+      right: 20%;
+      margin-top: 0.5vh;
+      border-radius: 8px;
+      height: 2.7vh;
+      border: 1px solid #009921;
+      background: #10ff002b;
+      color: white;
+      letter-spacing: 1px;
+    }
+    .buyButton:hover {
+      background: #11ff0050;
+      border: 1px solid #00c22a;
+    }
+    .buyButton:active {
+      background: #10ff002b;
+      border: 1px solid #009921;
+    }
+    /* .buttn {
+      padding:3px 3px;
+      width: 160px;
+      height: 32px;
+      right: 20%;
+      background-color: #000000;
+      border: 3px solid #C43402;
+      border-radius: 10px;
+      color: #ffffff;
+      letter-spacing: 1px;
+      font-family: 'nebularegular';
+      font-size: 24px;
+      text-align: -webkit-center; */
+      /* max-height: 3.3vh; */
+      /* white-space: nowrap;
+    } */
+    /* .buttn:hover {
+      background-color: #C9481B;
+      border: 3px solid #C9481B;
+    }
+    .buttn:active {
+      background-color: #C43402;
+      border: 3px solid #C43402;
+    } */
+    .release-info-container {
+      width: 100%;
+      text-align: center;
+      color: #36a2eb;
+      display: inline-flex;
+    }
+    .release-info-nav {
+      position: absolute;
+      margin-top: -4vh;
+      font-size: 3vh;
+      font-family: 'dinregular';
+      width: -webkit-fill-available;
+      text-align: right;
+    }
+    .release-info-container-left { 
+      width: 50%;
+    }
+    .release-info-container-right {
+      width: 48%;
+      margin-top: 6.5vh;
+    }
+    .release-info-container-left-label {
+      width: 100%;
+      font-size: 2.3vh;
+      margin-top: 2vh;
+      margin-bottom: 0.5vh;
+      color: rgba(231, 127, 60, 1);
+    }
+    .release-info-container-right-label, .release-info-container-right-data {
+      width: 44%;
+      display: inline-flex;
+    }
+    .release-info-container-right-label {
+      font-size: 2.5vh;
+      margin-bottom: 1vh;
+      max-height: 2.5vh;
+      overflow: hidden;
+    }
+    .release-info-container-right-data {
+      flex-direction: row-reverse;
+      align-items: flex-end;
+    }
+    .blue {
+      color: #36a2eb;
+    }
+    .silver {
+      color: #C0C0C0;
+    }
+    .redeemColor {
+      color: #e77f3c;
+    }
+    .tokenColor {
+      color: #e77f3c;
+    }
+    .sectionTitle {
+      font-family: 'nebularegular';
+      font-size: 5vh;
+      color: #ff6700;
+      position: absolute;
+      margin-top: -5vh;
+      width: 90%;
+      margin-left: 5vw;
+      text-align: center;
+    }
+    #batch1 {
+      /*background: rgba(255, 99, 132, 0.2);*/
+      border: 2px solid rgba(255, 99, 132, 1);
+      box-shadow: 0px 0px 4px 0px rgba(231, 127, 60, 1);
+      color: rgba(231, 127, 60, 1);
+    }
+    #batch2 {
+      /*border: rgba(64, 162, 235, 0.2);*/
+      border: 2px solid rgba(4, 235, 255, 1);
+      box-shadow: 0px 0px 4px 0px rgba(64, 162, 235, 1);
+      color: rgba(4, 235, 255, 1);
+    }
+    #batch3 {
+      /*background: rgba(137, 86, 254, 0.2);*/
+      border: 2px solid rgba(5, 125, 253, 1);
+      box-shadow: 0px 0px 4px 0px rgba(137, 86, 254, 1);
+      color: rgba(5, 125, 253, 1);
+    }
+    .batch-buy-button {
+      width: 70%;
+      left: 15%;
+      position: relative;
+    }
+</style>
+</head>
+
+<body id='bodyID'>
+  <div id="dashboard">
+    <div id="releases">
+        <div id="release-total" class="titleFont">Reserve Total: <span class="bigNumber">1,200,000,000 G</span></div>
+        <div class="release-pie-container">
+            <canvas class="release-pie" id="reservePie"></canvas>
+        </div>
+        <div class="release-info" id="">
+          <div class="release-info-nav"><span class="arrowLeft"><</span><span class="arrowRight">></span></div>
+          <div class="release-item">
+              <div class="release-item-left">
+                  <div class="release-info-title subTitleFont">Release 1: Ag47</div>
+                  <div class="release-info-container">
+                      <div class="release-info-container-left">
+                        <div class="release-info-container-left-label">
+                          Size of Release
+                        </div>
+                        <div class="release-info-container-left-data xbigNumber">
+                          200,000,000 G
+                        </div>
+                        <div class="release-info-container-left-label">
+                          Total Minted
+                        </div>
+                        <div class="release-info-container-left-data xbigNumber">
+                          100,000,000 G
+                        </div>
+                      </div>
+                      <div class="release-info-container-right">
+                        <span class="release-info-container-right-label tokenColor">Ag47 Spot:</span> 
+                        <span class='bigNumber release-info-container-right-data tokenColor'>$0.025</span>
+
+                        <span class="release-info-container-right-label redeemColor">Redeem At:</span> 
+                        <span class='bigNumber release-info-container-right-data redeemColor'>$47</span>
+
+                        <span class="release-info-container-right-label silver">Silver Spot:</span> 
+                        <span class='bigNumber release-info-container-right-data silver'>$39</span>
+                      </div>
+                  </div>
+              </div>
+              <div class="release-item-right">
+                <div class="release-bar-container">
+                    <canvas class="release-bar" width="150" height="150"></canvas>
+                </div>
+              </div>
+          </div>
+        </div>
+    </div>
+    <div id="mainPriceChart">
+      <div class="price-chart">
+        <div class="price-title titleFont">Price Comparison Chart</div>
+        <div class="price-line-container" style="position: relative; height:59vh; width:100%; overflow: hidden;">
+            <!--<canvas class="price-line" width="400" height="200"></canvas>  -->
+            <div id="tv_chart_container" class="price-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div id="dashboardBottom">
+    <div id="batches">
+      <div class="sectionTitle silver">BATCHES</div>
+      <div class="batch-item" id="batch1">
+        <div class="batch-content-left">
+          <div class="batch-pie-container">
+            <canvas class="batch-pie" width="100" height="100"></canvas>
+          </div>
+        </div>
+        <div class="batch-content-right">
+          <div class="batch-title subTitleFont">Batch 1 - Ag47</div>
+          <div class="batch-content"><span class="batch-item-label">Minted:</span> <span class='mediumNumber batch-item-label-right'>2,000,000</span></div>
+          <div class="batch-content"><span class="batch-item-label">Sold:</span> <span class='mediumNumber batch-item-label-right'>1,400,000</span></div>
+          <div class="batch-content"><span class="batch-item-label">Sale Price:</span> <span class='mediumNumber batch-item-label-right'>$0.036</span></div>
+          <div class="batch-content"><span class="batch-item-label redeemLabel">Redeem At:</span> <span class='mediumNumber batch-item-label-right'>$47</span></div>
+          <div class="batch-buy-button subTitleFont"><button class="buyButton" title="buy" onclick="tknFiat()">BUY</button></div>
+          <!-- <input class="buttn" value="Buy" onclick="doThing()" type="button" /> -->
+        </div>
+      </div>
+      <div class="batch-item" id="batch2">
+        <div class="batch-content-left">
+          <div class="batch-pie-container">
+            <canvas class="batch-pie" width="100" height="100"></canvas>
+          </div>
+        </div>
+        <div class="batch-content-right">
+          <div class="batch-title subTitleFont">Batch 2 - Ag80</div>
+          <div class="batch-content"><span class="batch-item-label">Minted:</span> <span class='mediumNumber batch-item-label-right'>2,000,000</span></div>
+          <div class="batch-content"><span class="batch-item-label">Sold:</span> <span class='mediumNumber batch-item-label-right'>1,400,000</span></div>
+          <div class="batch-content"><span class="batch-item-label">Sale Price:</span> <span class='mediumNumber batch-item-label-right'>$0.02</span></div>
+          <div class="batch-content"><span class="batch-item-label redeemLabel">Redeem At:</span> <span class='mediumNumber batch-item-label-right'>$80</span></div>
+          <div class="batch-buy-button subTitleFont"><button class="buyButton" title="buy" onclick="tknFiat()">BUY</button></div>
+          <!-- <input class="buttn" value="Buy" onclick="doThing()" type="button" /> -->
+        </div>
+      </div>
+      <div class="batch-item" id="batch3">
+        <div class="batch-content-left">
+          <div class="batch-pie-container">
+            <canvas class="batch-pie" width="100" height="100"></canvas>
+          </div>
+        </div>
+        <div class="batch-content-right">
+          <div class="batch-title subTitleFont">Batch 3 - Ag100</div>
+          <div class="batch-content"><span class="batch-item-label">Minted:</span> <span class='mediumNumber batch-item-label-right'>2,000,000</span></div>
+          <div class="batch-content"><span class="batch-item-label">Sold:</span> <span class='mediumNumber batch-item-label-right'>900,000</span></div>
+          <div class="batch-content"><span class="batch-item-label">Sale Price:</span> <span class='mediumNumber batch-item-label-right'>0.011c</span></div>
+          <div class="batch-content"><span class="batch-item-label redeemLabel">Redeem At:</span> <span class='mediumNumber batch-item-label-right'>$100</span></div>
+          <div class="batch-buy-button subTitleFont"><button class="buyButton" title="buy" onclick="tknFiat()">BUY</button></div>
+          <!-- <input class="buttn" value="Buy" onclick="doThing()" type="button" /> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample data for the pie charts and line chart
+    const pieChartData = {
+      labels: ['Release1: Ag47', 'Release2: Ag80', 'Release3: Ag100', 'Not Tokenised'],
+      datasets: [{
+        data: [30, 25, 15, 30],
+        backgroundColor: ['#e77f3c', '#04ebff', '#057dfd', '#333333'],
+        borderWidth: 0,
+      }]
+    };
+
+    const lineChartData = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      datasets: [
+        {
+          label: 'Ag100 Spot',
+          data: [7, 10, 8, 16, 15, 20],
+          borderColor: '#057dfd',
+          fill: false,
+        },
+        {
+          label: 'Ag80 Spot',
+          data: [8, 12, 10, 20, 18, 25],
+          borderColor: '#ff6384',
+          fill: false,
+        },
+        {
+          label: 'Ag47 Spot',
+          data: [12.5, 16, 24, 20, 30, 35],
+          borderColor: '#36a2eb',
+          fill: false,
+        },
+        {
+          label: 'Silver Spot',
+          data: [25, 30, 25, 27, 35, 39],
+          borderColor: '#C0C0C0',
+          fill: false,
+        },
+        {
+          label: 'Redemption1-$47',
+          data: [47,47,47,47,47,47],
+          borderColor: '#36a2eb',
+          fill: false,
+          borderWidth:1,
+          spanGaps: true,
+        },{
+          label: 'Redemption2-$80',
+          data: [80,80,80,80,80,80],
+          borderColor: '#ff6384',
+          fill: false,
+          borderWidth:1,
+          spanGaps: true,
+        },{
+          label: 'Redemption3-$100',
+          data: [100,100,100,100,100,100],
+          borderColor: '#8956ff',
+          fill: false,
+          borderWidth:1,
+          spanGaps: true,
+        },
+      ],
+    };
+
+    function init(){
+      // GSAP 
+      //gsap.set('#reservePie', { width:window.innerWidth * 0.45 })
+      gsap.from('#bodyID', { duration: 1, scale: 1, opacity: 0, delay:0.1 });
+    
+      // Create the pie chart using Chart.js
+      //Chart.register(ChartDataLabels);
+      const releasePie = new Chart(document.querySelector('.release-pie'), {
+        type: 'pie',
+        data: pieChartData,
+        plugins: [ChartDataLabels],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+              datalabels: {
+                color: 'white', // Label text color
+                //anchor:'end',
+                display: false,
+                font: {
+                  weight: 'bold',
+                  size: window.innerWidth * .012,
+                },
+                formatter: (value, context) => { // Customize label text (optional)
+                  return value + '%';
+                }
+              },
+              legend: {
+                  display: true,
+                  position: 'right',
+                  //padding: {right: 200},
+                  title: {
+                    display: true,
+                    font: {
+                      size: window.innerWidth * .02,
+                      family: 'nebularegular',
+                    },
+                    color: '#fff',
+                    text: 'RELEASES', // Custom legend title text
+                    padding: { top: -10, bottom: 5, right: 23} // Optional padding
+                  },
+                  labels: {
+                      color: '#ffffff',
+                      font: {
+                        size: window.innerWidth * .015
+                      }
+                  }
+                  //boxHeight:
+              },
+          }
+        }
+      });
+
+      // Create the bar chart using Chart.js
+      const releaseBar = new Chart(document.querySelector('.release-bar'), {
+        type: 'bar',
+        data: {
+          labels: ['Ag47 Spot Price','Silver Price','Redemption Price'],
+          datasets: [{
+            label: 'Price Per Ounce',
+            data: [35, 39, 47],
+            backgroundColor: ['#e79c6c', '#ffffff', '#e77f3c'],
+            barPercentage: 1, // Remove gap between bars
+            categoryPercentage: 1, // Remove gap between bars
+          }]
+        },
+        plugins: [ChartDataLabels],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              display: false
+            },
+            x: {
+              display: false, // Hide the x-axis
+            }
+          },
+          plugins: {
+              legend: {
+                  display: false
+              },
+              datalabels: {
+                color: 'white', // Label text color
+                anchor:'start',
+                align:'top',
+                offset: -4,//window.innerWidth * 0.003,
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                // //anchor:'start',
+                // align:'start',
+                // offset: 4,//window.innerWidth * 0.003,
+                // backgroundColor: 'rgba(0, 0, 0, 1)',
+                padding: {
+                  left: window.innerHeight * 0.018,
+                  right: window.innerHeight * 0.018,
+                  top: window.innerHeight * 0.007,
+                  bottom: window.innerHeight * 0.0099
+                },
+                font: {
+                  family:'ds-digitalnormal',
+                  //weight: 'bold',
+                  size: window.innerHeight * 0.022,
+                },
+                formatter: (value, context) => { // Customize label text (optional)
+                  return '$' + value;
+                }
+              },
+          }
+        }
+      });
+
+      // Create the line chart using Chart.js
+      /*const mainPriceLine = new Chart(document.querySelector('.price-line'), {
+        type: 'line',
+        data: lineChartData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              display: false, // Hide the x-axis
+            },
+            y: {
+              ticks: {
+                min: 0,
+                max: 100,
+                stepSize: 10,
+                // Include a dollar sign in the ticks
+                callback: function(value, index, ticks) {
+                    return '$' + value;
+                }
+              },
+              //display: false,
+              position: 'right'
+            }
+          },
+          plugins: {
+              legend: {
+                  display: true,
+                  position: 'bottom',
+                  labels: {
+                      color: '#ffffff',
+                      font: {
+                        size: window.innerWidth * .01
+                      }
+                  }
+              }
+          }
+        }
+      });*/
+
+      // // trading view test
+      // tvWidget = new TradingView.widget({
+      //   container_id: "tv_chart_container", // Specify the container element
+      //   symbol: "PYTH:XAGUSD", // Set the symbol for silver (XAGUSD is the TradingView symbol for silver)
+      //   compare_symbols: [
+      //       { symbol: 'PYTH:LTCUSD', title: '' }, //comparison: ['PYTH:LTCUSD','PYTH:ATOMUSD'],
+      //       { symbol: 'PYTH:ATOMUSD', title: '' },
+      //   ],
+      //   interval: "D", // Choose the desired interval (e.g., 'D' for daily)
+      //   timezone: "Etc/UTC", // Set the timezone (optional)
+      //   theme: "dark", // Choose the theme (optional)
+      //   hide_top_toolbar: false, // Show the TradingView toolbar (optional)
+      //   show_logo: true, // Display the TradingView logo (optional)
+      //   hide_legend: false, // Show the legend (optional)
+      //   hide_side_toolbar: true, // Show the interval selector (optional)
+      //   allow_symbol_change: true, // Show the 'powered by TradingView' link (optional)
+      //   autosize: true,
+
+      //   overrides: {
+      //     "paneProperties.background": "#C0C0C0",
+      //     "paneProperties.vertGridProperties.color": "#363c4e",
+      //     "paneProperties.horzGridProperties.color": "#363c4e",
+      //     "symbolWatermarkProperties.transparency": 90,
+      //     "scalesProperties.textColor" : "#AAA",
+      //     "mainSeriesProperties.candleStyle.wickUpColor": '#336854',
+      //     "mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
+      //    },
+      //     "style": "3",
+      //     "locale": "en",
+      //     "toolbar_bg": "#f1f3f6",
+      //     "enable_publishing": false,
+      //     "backgroundColor": "rgba(0, 0, 0, 1)",
+      //     "allow_symbol_change": true,
+      //     "save_image": false,
+      // });
+
+      // Create the pie charts in the batch
+      const batchPies = document.querySelectorAll('.batch-pie');
+      const batchColors = ['#e77f3c','#04ebff','#057dfd'];
+      let batchID = 0;
+      batchPies.forEach((batchPie) => {
+        new Chart(batchPie, {
+          type: 'pie',
+          data: {
+            labels: ['Sold','Unsold'],
+            datasets: [{
+              data: [70,30],
+              backgroundColor: [batchColors[batchID],'#333333'],
+              borderWidth: 0,
+            }]
+          },
+          plugins: [ChartDataLabels],
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                  display: false,
+                  position: 'bottom',
+                  /*labels: {
+                      color: 'rgb(255, 99, 132)'
+                  }*/
+              },
+              datalabels: {
+                color: 'white', // Label text color
+                font: {
+                  weight: 'bold',
+                  size: 14,
+                },
+                formatter: (value, context) => { // Customize label text (optional)
+                  return value + '%';
+                }
+              },
+            }
+          }
+        });
+        batchID = batchID + 1;
+      });
+    }
+  </script>
+</body>
+</html>

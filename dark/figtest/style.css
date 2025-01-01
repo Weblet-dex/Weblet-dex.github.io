@@ -1,0 +1,290 @@
+.desktop {
+    background-color: rgba(255, 255, 255, 1);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
+
+.desktop .div {
+    background-color: rgba(255, 255, 255, 1);
+    overflow: hidden;
+    background: linear-gradient(180deg, rgb(36.72, 45.69, 77.1) 0%, rgb(21, 24, 45) 100%);
+    width: 1440px;
+    height: 1024px;
+    position: relative;
+}
+
+.desktop .overlap-group {
+    position: absolute;
+    width: 513px;
+    height: 611px;
+    top: -141px;
+    left: -77px;
+}
+
+.desktop .ellipse {
+    width: 396px;
+    height: 396px;
+    left: 0;
+    border-radius: 198px;
+    position: absolute;
+    top: 0;
+    filter: blur(500px);
+    background: linear-gradient(180deg, rgb(250, 178, 255) 0%, rgb(25, 4, 229) 100%);
+}
+
+.desktop .softech {
+    position: absolute;
+    top: 215px;
+    left: 141px;
+    font-family: "Krona One-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 24px;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.desktop .startup-landing {
+    position: absolute;
+    top: 371px;
+    left: 141px;
+    font-family: "Manrope-Bold", Helvetica;
+    font-weight: 700;
+    color: transparent;
+    font-size: 96px;
+    letter-spacing: 0;
+    line-height: 120px;
+}
+
+.desktop .text-wrapper {
+    color: #ffffff;
+}
+
+.desktop .span {
+    color: #706af6;
+}
+
+.desktop .frame {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 16px 32px;
+    position: absolute;
+    top: 64px;
+    left: 1260px;
+    border-radius: 99px;
+    background: linear-gradient(180deg, rgb(254, 193, 99) 0%, rgb(222, 67, 19) 100%);
+}
+
+.desktop .text-wrapper-2 {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    font-family: "Manrope-Bold", Helvetica;
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.desktop .frame-2 {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 28px;
+    position: absolute;
+    top: 679px;
+    left: 64px;
+}
+
+.desktop .get-started-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 16px 32px;
+    position: relative;
+    flex: 0 0 auto;
+    border-radius: 99px;
+    background: linear-gradient(180deg, rgb(254, 193, 99) 0%, rgb(222, 67, 19) 100%);
+}
+
+.desktop .frame-3 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 16px 32px;
+    position: relative;
+    flex: 0 0 auto;
+    border-radius: 40px;
+    border: 1px solid;
+    border-color: #ffffff33;
+}
+
+.desktop .watch-demo {
+    position: relative;
+    width: fit-content;
+    font-family: "Manrope-Bold", Helvetica;
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.desktop .play {
+    position: relative;
+    width: 24px;
+    height: 24px;
+}
+
+.desktop .frame-4 {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 56px;
+    position: absolute;
+    top: 80px;
+    left: 447px;
+}
+
+.desktop .frame-5 {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.desktop .home {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    font-family: "Manrope-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 18px;
+    letter-spacing: 1.8px;
+    line-height: normal;
+}
+
+.desktop .line {
+    position: relative;
+    width: 69px;
+    height: 4px;
+}
+
+.desktop .text-wrapper-3 {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    opacity: 0.5;
+    font-family: "Manrope-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 18px;
+    letter-spacing: 1.8px;
+    line-height: normal;
+}
+
+.desktop .in-publishing-and {
+    position: absolute;
+    width: 545px;
+    top: 518px;
+    left: 64px;
+    opacity: 0.5;
+    font-family: "Manrope-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: 32px;
+}
+
+.desktop .overlap {
+    position: absolute;
+    width: 1111px;
+    height: 869px;
+    top: 180px;
+    left: 645px;
+}
+
+.desktop .overlap-2 {
+    position: absolute;
+    width: 1028px;
+    height: 869px;
+    top: 0;
+    left: 83px;
+}
+
+.desktop .overlap-3 {
+    position: absolute;
+    width: 670px;
+    height: 412px;
+    top: 457px;
+    left: 358px;
+}
+
+.desktop .ellipse-2 {
+    width: 412px;
+    height: 412px;
+    left: 258px;
+    border-radius: 206px;
+    position: absolute;
+    top: 0;
+    filter: blur(500px);
+    background: linear-gradient(180deg, rgb(250, 178, 255) 0%, rgb(25, 4, 229) 100%);
+}
+
+.desktop .saudi-logo {
+    position: absolute;
+    width: 290px;
+    height: 54px;
+    top: 255px;
+    left: 0;
+    mix-blend-mode: luminosity;
+}
+
+.desktop .object-other {
+    position: absolute;
+    width: 604px;
+    height: 604px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/other-07.png);
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+.desktop .edelkrone-svg-logosu {
+    position: absolute;
+    width: 326px;
+    height: 80px;
+    top: 699px;
+    left: 0;
+    mix-blend-mode: luminosity;
+}
+
+.desktop .img {
+    position: absolute;
+    width: 141px;
+    height: 80px;
+    top: 876px;
+    left: 64px;
+    mix-blend-mode: luminosity;
+}
+
+.desktop .logost-pierre-et {
+    position: absolute;
+    width: 209px;
+    height: 80px;
+    top: 879px;
+    left: 320px;
+    mix-blend-mode: luminosity;
+}
